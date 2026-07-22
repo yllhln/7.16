@@ -4,6 +4,14 @@ export interface Album { id: string; title: string; description: string; cover: 
 
 export const albums: Album[] = [
   {
+    "title": "我的眼睛",
+    "description": "一加ace3自拍",
+    "cover": "https://pub.mini-tools.uk/30-day/e4d90b01-2718-495c-bef4-2f7b06fc1624.png",
+    "id": "album_1784635733397",
+    "photos": [],
+    "date": "2026-07-21"
+  },
+  {
     "id": "terra-journey",
     "title": "泰拉大陆纪行",
     "description": "关于源石、孤星与前文明的视觉记录（测试用相册）",

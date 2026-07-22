@@ -2,7 +2,7 @@
 
 export const siteConfig = {
   // 1. 网站标题与博主信息
-  title: "XingHuiSama の 宝藏之地",
+  title: "XingHuiSama の 楚子航",
   faviconUrl: "https://bu.dusays.com/2026/03/24/69c1e38ac1846.jpg",
   authorName: "XingHuiSama",
   bio: "在代码、学术与分子动力学模拟间穿梭的普通人。近期正埋头于 GROMACS 模拟研究与神经网络计算。",
@@ -12,7 +12,7 @@ export const siteConfig = {
   // 👇 【新增】导航栏中间的那个后缀/分隔符（默认是 の）
   navSuffix: "の",
 
-  navAfter: "宝藏之地",
+  navAfter: "楚子航",
 
   // 2. 头像设置 (支持网络链接，或将图片放入 public 文件夹后使用 "/me.jpg")
   avatarUrl: "https://bu.dusays.com/2026/03/24/69c1e38ac1846.jpg",
@@ -31,11 +31,11 @@ export const siteConfig = {
   photoWallImage: "https://bu.dusays.com/2026/03/24/69c1e38b4c370.jpg",
   cloudMusicIds: ["1809646618", "3361076230", "1859390262"],
   social: {
-    github: "",
-    gitee: "",
-    google: "",
-    email: "",
-    qq: "1124533793",
+    github: "https://github.com/heiehiehi",
+    gitee: "https://github.com/heiehiehi",
+    google: "mailto:bilibiliwuwuwu@gmail.com",
+    email: "3295587260@qq.com",
+    qq: "3295587260",
     wechat: "XingHuisama",
   },
   counts: {
