@@ -2,12 +2,12 @@
 
 export const siteConfig = {
   // 1. 网站标题与博主信息
-  title: "XingHuiSama の 楚子航",
+  title: "yllhln の 楚子航",
   faviconUrl: "https://bu.dusays.com/2026/03/24/69c1e38ac1846.jpg",
-  authorName: "XingHuiSama",
-  bio: "在代码、学术与分子动力学模拟间穿梭的普通人。近期正埋头于 GROMACS 模拟研究与神经网络计算。",
+  authorName: "yllhln",
+  bio: "四川人",
 
-  navTitle: "XingHuiSama",
+  navTitle: "yllhln",
 
   // 👇 【新增】导航栏中间的那个后缀/分隔符（默认是 の）
   navSuffix: "の",
@@ -31,12 +31,12 @@ export const siteConfig = {
   photoWallImage: "https://bu.dusays.com/2026/03/24/69c1e38b4c370.jpg",
   cloudMusicIds: ["1809646618", "3361076230", "1859390262"],
   social: {
-    github: "https://github.com/heiehiehi",
+    github: "https://github.com/yllhln",
     gitee: "https://github.com/heiehiehi",
-    google: "mailto:bilibiliwuwuwu@gmail.com",
+    google: "3295587260yll@gmail.com",
     email: "3295587260@qq.com",
     qq: "3295587260",
-    wechat: "XingHuisama",
+    wechat: "s3295587260",
   },
   counts: {
     photos: 128, // 照片墙数量可以手动写死或动态计算
