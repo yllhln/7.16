@@ -5,27 +5,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { siteConfig } from '../siteConfig';
 
 export default function CyberCat() {
-  const [isClicking, setIsClicking] = useState(false); // 点击后短暂展示 2 秒
-  const [isHovering, setIsHovering] = useState(false);
-  const [isHolding, setIsHolding] = useState(false);
+  const [isPetted, setIsPetted] = useState(false);
   const [speech, setSpeech] = useState<string | null>(null);
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [isThinking, setIsThinking] = useState(false);
 
   const chatTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const pressTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const isLongPressRef = useRef(false); // 用来区分这次是"点击"还是"长按松开"
-
-  // 🌟 根据当前状态，决定该显示哪张图。优先级：长按 > 思考中 > 点击 > 悬停 > 待机
-  // 没配置某个状态的图时，自动退回待机图，不会白屏
-  const currentImage =
-    (isHolding && siteConfig.petHoldImage) ||
-    (isThinking && siteConfig.petClickImage) ||
-    (isClicking && siteConfig.petClickImage) ||
-    (isHovering && siteConfig.petHoverImage) ||
-    siteConfig.petIdleImage ||
-    '/siamese-cat.png';
 
   // --- 💬 说话功能 ---
   const speak = (text: string, duration = 6000) => {
@@ -36,46 +22,14 @@ export default function CyberCat() {
     }, duration);
   };
 
-  // --- 🖱️ 交互事件：单击摸猫猫 ---
+  // --- 🖱️ 交互事件：摸猫猫 ---
   const handlePetCat = () => {
-    if (isClicking) return;
-    setIsClicking(true);
+    if (isPetted) return;
+    setIsPetted(true);
     speak("呼噜噜... 摸得本喵很舒服喵~", 2000);
     setTimeout(() => {
-      setIsClicking(false);
+      setIsPetted(false);
     }, 2000);
-  };
-
-  // --- 🖐️ 交互事件：长按检测 ---
-  const handlePressStart = () => {
-    isLongPressRef.current = false;
-    pressTimerRef.current = setTimeout(() => {
-      isLongPressRef.current = true;
-      setIsHolding(true);
-    }, 400); // 按住超过 0.4 秒判定为长按
-  };
-
-  const handlePressEnd = () => {
-    if (pressTimerRef.current) {
-      clearTimeout(pressTimerRef.current);
-      pressTimerRef.current = null;
-    }
-    if (isLongPressRef.current) {
-      // 长按松开：结束长按状态，不触发点击效果
-      setIsHolding(false);
-    } else {
-      // 没到长按时长：算作一次普通点击
-      handlePetCat();
-    }
-  };
-
-  const handlePressCancel = () => {
-    // 鼠标移出等情况，直接取消，不算点击也不算长按
-    if (pressTimerRef.current) {
-      clearTimeout(pressTimerRef.current);
-      pressTimerRef.current = null;
-    }
-    setIsHolding(false);
   };
 
   // --- 🐟 交互事件：喂小鱼干 ---
@@ -212,21 +166,43 @@ export default function CyberCat() {
             </button>
         </div>
 
-        {/* 猫咪图片容器：悬停/按下/松开/移出 分别对应 悬停/长按/点击/取消 */}
+        {/* 猫咪图片容器 */}
         <div
-          className="w-[120px] h-[120px] relative cursor-pointer select-none"
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => { setIsHovering(false); handlePressCancel(); }}
-          onMouseDown={handlePressStart}
-          onMouseUp={handlePressEnd}
+          className="w-[120px] h-[120px] relative cursor-pointer"
+          onClick={handlePetCat}
         >
-          <img
-            src={currentImage}
-            alt="桌宠"
-            draggable={false}
-            className="w-full h-full object-contain drop-shadow-2xl pointer-events-none select-none"
-            style={{ imageRendering: 'pixelated' }}
-          />
+          <style>{`
+            .cat-sprite {
+              width: 100%;
+              height: 100%;
+              background-image: url('${siteConfig.petImageUrl || '/siamese-cat.png'}'); 
+              background-size: 300% 300%; 
+              background-repeat: no-repeat;
+              image-rendering: pixelated; 
+            }
+            .cat-idle {
+              animation: idle-frames 1.2s infinite;
+              background-position-y: 0%; 
+            }
+            .cat-petted {
+              animation: pet-frames 0.8s infinite;
+              background-position-y: 50%; 
+            }
+            .cat-thinking {
+              animation: idle-frames 0.6s infinite;
+              background-position-y: 0%; 
+            }
+            @keyframes idle-frames {
+              0%, 33.32% { background-position-x: 0%; }
+              33.33%, 66.65% { background-position-x: 50%; }
+              66.66%, 100% { background-position-x: 100%; }
+            }
+            @keyframes pet-frames {
+              0%, 49.99% { background-position-x: 0%; }
+              50%, 100% { background-position-x: 50%; }
+            }
+          `}</style>
+          <div className={`cat-sprite drop-shadow-2xl ${isPetted ? 'cat-petted' : isThinking ? 'cat-thinking' : 'cat-idle'}`} />
         </div>
       </div>
 

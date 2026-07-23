@@ -66,12 +66,8 @@ export const siteConfig = {
     maxOutputTokens: 150,
     temperature: 0.85,
   },
-  // 👇 【桌宠形象素材】四个状态各一张图，支持静态图(png/jpg)或动图(gif)
-  // 待机图为必填，其余三个不填时会自动用待机图顶替
-  petIdleImage: "/backgrounds/7.23.1.gif",   // 待机：默认显示
-  petHoverImage: "/backgrounds/7.23.2.gif",                  // 悬停：鼠标移上去（不用点）
-  petClickImage: "/backgrounds/7.23.3.gif",                  // 点击：单击一下
-  petHoldImage: "/backgrounds/7.23.4.gif",                   // 长按：按住不放超过 0.4 秒
+  // 👇 【新增】：AI 桌宠形象素材 (请填九宫格雪碧图链接，3x3 排布的连续动作图)
+  petImageUrl: "/siamese-cat.png",
   friendLinkApplyFormat: "名称：XingHuiSamaの宝藏之地\n简介：今天我也要学习吗\n链接：https://www.xinghuisama.top\n头像：https://bu.dusays.com/2026/03/24/69c1e38ac1846.jpg",
   enableLevelSystem: true,
 };
