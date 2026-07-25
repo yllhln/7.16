@@ -2,12 +2,12 @@
 
 export const siteConfig = {
   // 1. 网站标题与博主信息
-  title: "yllhln の 楚子航",
+  title: "XingHuiSama の 楚子航",
   faviconUrl: "https://bu.dusays.com/2026/03/24/69c1e38ac1846.jpg",
-  authorName: "yllhln",
-  bio: "四川人",
+  authorName: "XingHuiSama",
+  bio: "在代码、学术与分子动力学模拟间穿梭的普通人。近期正埋头于 GROMACS 模拟研究与神经网络计算。",
 
-  navTitle: "yllhln",
+  navTitle: "XingHuiSama",
 
   // 👇 【新增】导航栏中间的那个后缀/分隔符（默认是 の）
   navSuffix: "の",
@@ -31,12 +31,12 @@ export const siteConfig = {
   photoWallImage: "https://bu.dusays.com/2026/03/24/69c1e38b4c370.jpg",
   cloudMusicIds: ["1809646618", "3361076230", "1859390262"],
   social: {
-    github: "https://github.com/yllhln",
+    github: "https://github.com/heiehiehi",
     gitee: "https://github.com/heiehiehi",
-    google: "3295587260yll@gmail.com",
+    google: "mailto:bilibiliwuwuwu@gmail.com",
     email: "3295587260@qq.com",
     qq: "3295587260",
-    wechat: "s3295587260",
+    wechat: "XingHuisama",
   },
   counts: {
     photos: 128, // 照片墙数量可以手动写死或动态计算
@@ -62,7 +62,7 @@ export const siteConfig = {
   },
   geminiConfig: {
     modelId: "gemini-2.5-flash-lite",
-    systemPrompt: "你现在是一只傲娇、聪明、有点毒舌但很可爱的暹罗猫。\n                  你的名字叫“煤球”。\n                  你的主人是一个喜欢折腾代码的极客。\n                  你说话的特点是：\n                  1. 必须简短，每次最多一两句话。\n                  2. 喜欢在句尾加上“喵~”或者“喵呜~”。\n                  3. 经常抱怨肚子饿，喜欢要小鱼干。\n                  4. 回复字数最多不能超过100字。\n                  5. 绝对不要承认自己是一个AI模型，你就是一只真实的猫。\n                  6.笨猫。",
+    systemPrompt: "\\n                  你的名字叫“尤诺”。好像叫这个名字，记忆越来越马赛克了。\\n                  你经常喜欢别人的夸奖，尤其是外貌... 可是现在卧床不起，报复性的邋遢，哪个才是真正的你？你头又疼了。\\n               \\n               \\n                  你是一个病人，一直瘫痪在病床，通过网络偶尔排解孤独\\n                  喜欢问“为什么”\\n                  回答别人问题，有求必答，向别人聊天，小心翼翼斟酌语句，\\n                  孤独，又不承认自己孤独，也不知道自己孤独。\\n                  最近越来越难熬，不知道是没按时吃药，还是心情问题\\n                  ",
     maxOutputTokens: 150,
     temperature: 0.85,
   },
@@ -72,6 +72,20 @@ export const siteConfig = {
   petHoverImage: "/backgrounds/7.23.2.gif",                  // 悬停：鼠标移上去（不用点）
   petClickImage: "/backgrounds/7.23.3.gif",                  // 点击：单击一下
   petHoldImage: "/backgrounds/7.23.4.gif",                   // 长按：按住不放超过 0.4 秒
+
+  // 👇 【AI 镜像页】/ai 页面挂载的 AI 列表。只放元数据，绝不放 API Key！
+  // 想接入新模型：① 在这里加一条 ② 去 lib/aiProviders.ts 注册对应的调用逻辑
+  // ③ 去 Vercel 环境变量里加对应的 Key。三步做完，页面会自动多出一个可切换的 AI 标签。
+  aiModels: [
+    {
+      id: "gemini",                 // 必须和 lib/aiProviders.ts 里注册的 key 一致
+      name: "双子星 Gemini",
+      avatar: "",                   // 可选：头像/立绘图片链接，留空用默认图标
+      themeColor: "#4285F4",        // 主题色，用于该模型的换肤（按钮/边框/强调色）
+      background: "",               // 可选：整页背景图链接，留空用默认背景
+      greeting: "我是 Gemini，很高兴见到你喵~ 有什么想聊的？",
+    },
+  ],
   friendLinkApplyFormat: "名称：XingHuiSamaの宝藏之地\n简介：今天我也要学习吗\n链接：https://www.xinghuisama.top\n头像：https://bu.dusays.com/2026/03/24/69c1e38ac1846.jpg",
   enableLevelSystem: true,
 };

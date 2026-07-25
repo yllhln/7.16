@@ -9,7 +9,7 @@ export default function CyberCat() {
   const [isHovering, setIsHovering] = useState(false);
   const [isHolding, setIsHolding] = useState(false);
   const [speech, setSpeech] = useState<string | null>(null);
-  const [showInput, setShowInput] = useState(false);
+  const [showInput, setShowInput] = useState(false); // 对话框默认隐藏，点击猫咪才弹出
   const [inputValue, setInputValue] = useState('');
   const [isThinking, setIsThinking] = useState(false);
 
@@ -36,14 +36,22 @@ export default function CyberCat() {
     }, duration);
   };
 
-  // --- 🖱️ 交互事件：单击摸猫猫 ---
+  // --- 🖱️ 交互事件：单击猫猫，弹出/收起对话框 ---
   const handlePetCat = () => {
     if (isClicking) return;
     setIsClicking(true);
-    speak("呼噜噜... 摸得本喵很舒服喵~", 2000);
     setTimeout(() => {
       setIsClicking(false);
     }, 2000);
+
+    setShowInput(prev => {
+      const next = !prev;
+      if (next) {
+        // 弹出对话框时触发一句台词（以后接入 TTS 会在这里加语音播报）
+        speak("寂寞的滴出水", 3000);
+      }
+      return next;
+    });
   };
 
   // --- 🖐️ 交互事件：长按检测 ---
@@ -76,33 +84,6 @@ export default function CyberCat() {
       pressTimerRef.current = null;
     }
     setIsHolding(false);
-  };
-
-  // --- 🐟 交互事件：喂小鱼干 ---
-  const handleFeed = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // 阻止触发摸猫或拖拽
-    if (isThinking) return;
-
-    setShowInput(false); // 喂食时关掉输入框
-    setIsThinking(true);
-    speak("嗷呜！真好吃喵！本喵吃饱了要说两句...", 6000);
-
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: "我刚刚喂了你一条美味的小鱼干！你有什么表示？" }),
-      });
-
-      if (!res.ok) throw new Error('API Error');
-
-      const data = await res.json();
-      speak(data.reply, 8000);
-    } catch (error) {
-      speak("吧唧吧唧... 鱼干好吃，但本喵卡壳了喵...", 4000);
-    } finally {
-      setIsThinking(false);
-    }
   };
 
   // --- 💬 交互事件：发送聊天 ---
@@ -160,7 +141,7 @@ export default function CyberCat() {
       dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
       dragElastic={0.1}
       whileDrag={{ scale: 1.1, cursor: "grabbing" }}
-      className="fixed bottom-20 right-20 z-[9999] flex flex-col items-center group cursor-grab active:cursor-grabbing"
+      className="fixed bottom-20 right-20 z-[9999] flex flex-col items-center cursor-grab active:cursor-grabbing"
     >
       {/* 💬 聊天气泡 */}
       <div className="relative w-full flex justify-center mb-6">
@@ -180,65 +161,33 @@ export default function CyberCat() {
         </AnimatePresence>
       </div>
 
-      {/* 🐈 猫咪本体 & 交互按钮区 */}
-      <div className="relative">
-
-        {/* 🌟 核心修改区：去掉了 opacity-0 和 group-hover，让按钮常驻显示 */}
-        <div className="absolute -left-12 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-20">
-
-            {/* 💬 聊天按钮 */}
-            <button
-              onClick={(e) => {
-                 e.stopPropagation();
-                 setShowInput(!showInput);
-              }}
-              // 稍微加了一点半透明背景，让常驻按钮在深色背景下也好看
-              className="bg-white/90 dark:bg-slate-700/90 p-2.5 rounded-full shadow-md hover:scale-110 active:scale-95 transition-transform border border-gray-100 dark:border-slate-600 text-blue-500 hover:text-blue-600 flex items-center justify-center backdrop-blur-sm"
-              title="聊天"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                <path fillRule="evenodd" d="M4.804 21.644A6.707 6.707 0 006 21.75a6.721 6.721 0 003.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 01-.814 1.686.75.75 0 00.44 1.223zM8.25 10.875a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zM10.875 12a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z" clipRule="evenodd" />
-              </svg>
-            </button>
-
-            {/* 🐟 喂食按钮 */}
-            <button
-              onClick={handleFeed}
-              disabled={isThinking}
-              className={`bg-white/90 dark:bg-slate-700/90 p-2.5 rounded-full shadow-md hover:scale-110 active:scale-95 transition-transform border border-gray-100 dark:border-slate-600 flex items-center justify-center backdrop-blur-sm ${isThinking ? 'opacity-50 cursor-not-allowed' : ''}`}
-              title="喂小鱼干"
-            >
-              <span className="text-xl leading-none">🐟</span>
-            </button>
-        </div>
-
-        {/* 猫咪图片容器：悬停/按下/松开/移出 分别对应 悬停/长按/点击/取消 */}
-        <div
-          className="w-[120px] h-[120px] relative cursor-pointer select-none"
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => { setIsHovering(false); handlePressCancel(); }}
-          onMouseDown={handlePressStart}
-          onMouseUp={handlePressEnd}
-        >
-          <img
-            src={currentImage}
-            alt="桌宠"
-            draggable={false}
-            className="w-full h-full object-contain drop-shadow-2xl pointer-events-none select-none"
-            style={{ imageRendering: 'pixelated' }}
-          />
-        </div>
+      {/* 🐈 猫咪本体 */}
+      {/* 猫咪图片容器：悬停/按下/松开/移出 分别对应 悬停/长按/点击/取消 */}
+      <div
+        className="w-[120px] h-[120px] relative cursor-pointer select-none"
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => { setIsHovering(false); handlePressCancel(); }}
+        onMouseDown={handlePressStart}
+        onMouseUp={handlePressEnd}
+      >
+        <img
+          src={currentImage}
+          alt="桌宠"
+          draggable={false}
+          className="w-full h-full object-contain drop-shadow-2xl pointer-events-none select-none"
+          style={{ imageRendering: 'pixelated' }}
+        />
       </div>
 
-      {/* ⌨️ 互动输入框 */}
+      {/* ⌨️ 对话框：默认隐藏，点击猫咪才弹出 */}
       <AnimatePresence>
         {showInput && (
           <motion.form
-            initial={{ opacity: 0, y: -10, scale: 0.9 }}
+            initial={{ opacity: 0, y: -6, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.9 }}
+            exit={{ opacity: 0, y: -6, scale: 0.9 }}
             onSubmit={handleChatSubmit}
-            className="absolute -bottom-14 bg-white dark:bg-slate-800 p-1.5 rounded-full shadow-lg flex items-center border border-gray-200 dark:border-slate-700 w-56 z-20"
+            className="mt-3 bg-white dark:bg-slate-800 p-1.5 rounded-full shadow-lg flex items-center border border-gray-200 dark:border-slate-700 w-56 z-20"
           >
             <input
               type="text"

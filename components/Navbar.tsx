@@ -74,6 +74,7 @@ export default function Navbar() {
     { name: '归档', href: '/timeline' },
     { name: '照片墙', href: '/photowall' },
     { name: '音乐', href: '/music' },
+    { name: 'AI', href: '/ai' },
     { name: '灵境', href: '/tree' },
     { name: '说说', href: '/moments' },
     { name: '杂谈', href: '/chatter' },
