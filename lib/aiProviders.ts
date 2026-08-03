@@ -13,24 +13,33 @@
 type ChatParams = {
   message: string;
   systemPrompt?: string;
+  // 👇 【AI 宠物"发文件"功能】图片走多模态：base64 编码 + MIME 类型
+  fileBase64?: string;
+  fileMimeType?: string;
 };
 
 type ProviderHandler = (params: ChatParams) => Promise<string>;
 
 // --- 🔮 Gemini（谷歌）---
-const callGemini: ProviderHandler = async ({ message, systemPrompt }) => {
+const callGemini: ProviderHandler = async ({ message, systemPrompt, fileBase64, fileMimeType }) => {
   const apiKey = (process.env.GEMINI_API_KEY || '').trim();
   if (!apiKey) throw new Error('未配置 GEMINI_API_KEY 环境变量');
 
   const modelId = process.env.GEMINI_AI_PAGE_MODEL || 'gemini-2.5-flash-lite';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`;
 
+  // 🌟 有图片就一起塞进 parts 里（Gemini 原生支持文字+图片混合输入）
+  const parts: any[] = [{ text: message }];
+  if (fileBase64 && fileMimeType) {
+    parts.push({ inline_data: { mime_type: fileMimeType, data: fileBase64 } });
+  }
+
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       system_instruction: systemPrompt ? { parts: [{ text: systemPrompt }] } : undefined,
-      contents: [{ parts: [{ text: message }] }],
+      contents: [{ parts }],
     }),
   });
 
@@ -69,6 +78,10 @@ const providers: Record<string, ProviderHandler> = {
   gemini: callGemini,
   // deepseek: callDeepSeek,  // 以后启用新模型时，把这一行取消注释即可
 };
+
+// 🌟 已注册的供应商列表，供控制台设置面板的"添加新人格"下拉框使用
+// 加新供应商时，记得把上面 providers 对象的新 key 也加进这里
+export const registeredProviders: string[] = Object.keys(providers);
 
 export async function callAI(modelId: string, params: ChatParams): Promise<string> {
   const handler = providers[modelId];

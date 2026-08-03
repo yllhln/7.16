@@ -3,8 +3,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { siteConfig } from '../siteConfig';
+import { useTheme } from './ThemeProvider';
+
+// 🌟 兜底：万一 aiModels 没配置或找不到对应人格，也不会崩
+const findModel = (id: string | undefined) =>
+  siteConfig.aiModels?.find((m: any) => m.id === id);
 
 export default function CyberCat() {
+  const { isDark } = useTheme();
   const [isClicking, setIsClicking] = useState(false); // 点击后短暂展示 2 秒
   const [isHovering, setIsHovering] = useState(false);
   const [isHolding, setIsHolding] = useState(false);
@@ -17,14 +23,20 @@ export default function CyberCat() {
   const pressTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isLongPressRef = useRef(false); // 用来区分这次是"点击"还是"长按松开"
 
+  // 🌟 根据当前日/夜模式，决定当前用哪个 AI 人格 + 哪套桌宠皮肤
+  const activeModel =
+    findModel(isDark ? siteConfig.petNightModelId : siteConfig.petDayModelId) ||
+    findModel(siteConfig.petNightModelId) ||
+    siteConfig.aiModels?.[0];
+
   // 🌟 根据当前状态，决定该显示哪张图。优先级：长按 > 思考中 > 点击 > 悬停 > 待机
-  // 没配置某个状态的图时，自动退回待机图，不会白屏
+  // 当前人格没配置某个状态的图时，自动退回待机图；连待机图都没有，退回默认图
   const currentImage =
-    (isHolding && siteConfig.petHoldImage) ||
-    (isThinking && siteConfig.petClickImage) ||
-    (isClicking && siteConfig.petClickImage) ||
-    (isHovering && siteConfig.petHoverImage) ||
-    siteConfig.petIdleImage ||
+    (isHolding && activeModel?.petHoldImage) ||
+    (isThinking && activeModel?.petClickImage) ||
+    (isClicking && activeModel?.petClickImage) ||
+    (isHovering && activeModel?.petHoverImage) ||
+    activeModel?.petIdleImage ||
     '/siamese-cat.png';
 
   // --- 💬 说话功能 ---
@@ -98,10 +110,14 @@ export default function CyberCat() {
     speak("让本喵想想喵...", 10000);
 
     try {
-      const res = await fetch('/api/chat', {
+      const res = await fetch('/api/ai-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage }),
+        body: JSON.stringify({
+          modelId: activeModel?.provider || 'gemini',
+          message: userMessage,
+          systemPrompt: activeModel?.systemPrompt,
+        }),
       });
 
       if (!res.ok) throw new Error('API Error');
@@ -134,6 +150,9 @@ export default function CyberCat() {
     return () => clearInterval(randomTalkInterval);
   }, [speech, showInput, isThinking]);
 
+  // 🌟 桌宠总开关：控制台关掉之后，直接不渲染，网站右下角桌宠完全消失
+  // 注意：这个判断必须放在所有 Hooks 调用之后，不能提前 return
+  if (siteConfig.petEnabled === false) return null;
 
   return (
     <motion.div

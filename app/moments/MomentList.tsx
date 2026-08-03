@@ -20,9 +20,20 @@ export default function MomentList({ moments, authorName, avatarUrl }: any) {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
   const [lightbox, setLightbox] = useState<{ images: string[], index: number } | null>(null);
+  // 🌟 AI 宠物生成的"信件"：完全存在访客自己的浏览器里，不会影响其他访客、不会同步到服务器
+  const [localLetters, setLocalLetters] = useState<any[]>([]);
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('ai-pet-letters') || '[]');
+      if (Array.isArray(saved)) setLocalLetters(saved);
+    } catch {
+      // 读取失败就当没有信件
+    }
+  }, []);
 
   const processedMoments = useMemo(() => {
-    let result = moments ? [...moments] : [];
+    let result = [...(moments || []), ...localLetters];
 
     if (searchQuery.trim()) {
       const query = searchQuery.trim().toLowerCase();
@@ -38,7 +49,7 @@ export default function MomentList({ moments, authorName, avatarUrl }: any) {
       return sortOrder === 'desc' ? timeB - timeA : timeA - timeB;
     });
     return result;
-  }, [moments, searchQuery, sortOrder]);
+  }, [moments, localLetters, searchQuery, sortOrder]);
 
   const nextImg = (e: React.MouseEvent) => {
     e.stopPropagation();

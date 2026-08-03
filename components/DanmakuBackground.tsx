@@ -33,6 +33,25 @@ export default function DanmakuBackground() {
       });
     }
     setDanmakus(generatedDanmakus);
+
+    // 🌟 监听"注入弹幕"事件：AI 宠物回复时可以顺手往屏幕上飘一条弹幕
+    // 用法：window.dispatchEvent(new CustomEvent('inject-danmaku', { detail: '弹幕内容' }))
+    const handleInject = (e: Event) => {
+      const text = (e as CustomEvent).detail;
+      if (!text || typeof text !== 'string') return;
+      setDanmakus(prev => [
+        ...prev,
+        {
+          id: Date.now() + Math.random(),
+          text,
+          top: Math.random() * 80 + 10,
+          duration: Math.random() * 10 + 18,
+          delay: 0,
+        },
+      ]);
+    };
+    window.addEventListener('inject-danmaku', handleInject);
+    return () => window.removeEventListener('inject-danmaku', handleInject);
   }, []);
 
   return (

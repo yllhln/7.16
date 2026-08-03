@@ -75,7 +75,7 @@ export default function Navbar() {
     { name: '照片墙', href: '/photowall' },
     { name: '音乐', href: '/music' },
     { name: 'AI', href: '/ai' },
-    { name: '灵境', href: '/tree' },
+    { name: siteConfig.petPageTitle || 'AI 宠物', href: '/pet' },
     { name: '说说', href: '/moments' },
     { name: '杂谈', href: '/chatter' },
     { name: '友链', href: '/friends' },

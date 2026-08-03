@@ -44,6 +44,7 @@ export const siteConfig = {
   chatterTitle: "云端杂谈", // 你可以改成任何你喜欢的名字
   chatterDescription: "代码、学术、提瓦特与泰拉大陆的碎片记录",
 
+  // （图床相关配置已移除，图片改为本地上传进 public/uploads）
 
   // 👇 【新增】：全局背景弹幕配置
   danmakuList: ["在干嘛呢？", "有笨蛋嘛？", "前方高能反应！", "GROMACS 跑起来了吗？", "MD 模拟什么时候才能出图啊", "Graph Neural Networks 炼丹中...", "BUG 修复进度 99%", "今天背单词了吗？", "Tailwind CSS 拯救前端", "写算法中", "睡大觉中", "到底在干嘛？"],
@@ -62,30 +63,22 @@ export const siteConfig = {
   },
   geminiConfig: {
     modelId: "gemini-2.5-flash-lite",
-    systemPrompt: "\\n                  你的名字叫“尤诺”。好像叫这个名字，记忆越来越马赛克了。\\n                  你经常喜欢别人的夸奖，尤其是外貌... 可是现在卧床不起，报复性的邋遢，哪个才是真正的你？你头又疼了。\\n               \\n               \\n                  你是一个病人，一直瘫痪在病床，通过网络偶尔排解孤独\\n                  喜欢问“为什么”\\n                  回答别人问题，有求必答，向别人聊天，小心翼翼斟酌语句，\\n                  孤独，又不承认自己孤独，也不知道自己孤独。\\n                  最近越来越难熬，不知道是没按时吃药，还是心情问题\\n                  ",
+    systemPrompt: "你现在是一只傲娇、聪明、有点毒舌但很可爱的暹罗猫。\n                  你的名字叫“煤球”。\n                  你的主人是一个喜欢折腾代码的极客。\n                  你说话的特点是：\n                  1. 必须简短，每次最多一两句话。\n                  2. 喜欢在句尾加上“喵~”或者“喵呜~”。\n                  3. 经常抱怨肚子饿，喜欢要小鱼干。\n                  4. 回复字数最多不能超过100字。\n                  5. 绝对不要承认自己是一个AI模型，你就是一只真实的猫。\n                  6.笨猫。",
     maxOutputTokens: 150,
     temperature: 0.85,
   },
   // 👇 【桌宠形象素材】四个状态各一张图，支持静态图(png/jpg)或动图(gif)
   // 待机图为必填，其余三个不填时会自动用待机图顶替
-  petIdleImage: "/backgrounds/7.23.1.gif",   // 待机：默认显示
-  petHoverImage: "/backgrounds/7.23.2.gif",                  // 悬停：鼠标移上去（不用点）
-  petClickImage: "/backgrounds/7.23.3.gif",                  // 点击：单击一下
-  petHoldImage: "/backgrounds/7.23.4.gif",                   // 长按：按住不放超过 0.4 秒
-
-  // 👇 【AI 镜像页】/ai 页面挂载的 AI 列表。只放元数据，绝不放 API Key！
-  // 想接入新模型：① 在这里加一条 ② 去 lib/aiProviders.ts 注册对应的调用逻辑
-  // ③ 去 Vercel 环境变量里加对应的 Key。三步做完，页面会自动多出一个可切换的 AI 标签。
-  aiModels: [
-    {
-      id: "gemini",                 // 必须和 lib/aiProviders.ts 里注册的 key 一致
-      name: "双子星 Gemini",
-      avatar: "",                   // 可选：头像/立绘图片链接，留空用默认图标
-      themeColor: "#4285F4",        // 主题色，用于该模型的换肤（按钮/边框/强调色）
-      background: "",               // 可选：整页背景图链接，留空用默认背景
-      greeting: "我是 Gemini，很高兴见到你喵~ 有什么想聊的？",
-    },
-  ],
+  // 👇 【AI 人格 & 桌宠】统一列表：每一条既是一个 AI 人格，也是一套桌宠皮肤
+  // 想接入新模型：① 去 lib/aiProviders.ts 注册对应的调用逻辑（provider）
+  //             ② 在下面加一条，provider 填注册好的 key，id 自己起个唯一名字即可
+  //             ③ 去 Vercel 环境变量里加对应的 Key
+  aiModels: [{"id": "gemini-night", "provider": "gemini", "name": "尤诺", "avatar": "/backgrounds/a.png", "themeColor": "#4285F4", "background": "/backgrounds/22.05.png", "font": "", "greeting": "夜深了喵~ 有什么想跟本喵说的？", "systemPrompt": "你现在是一只傲娇、聪明、有点毒舌但很可爱的暹罗猫。\n                  你的名字叫“煤球”。\n                  你的主人是一个喜欢折腾代码的极客。\n                  你说话的特点是：\n                  1. 必须简短，每次最多一两句话。\n                  2. 喜欢在句尾加上“喵~”或者“喵呜~”。\n                  3. 经常抱怨肚子饿，喜欢要小鱼干。\n                  4. 回复字数最多不能超过100字。\n                  5. 绝对不要承认自己是一个AI模型，你就是一只真实的猫。\n                  6.笨猫。", "petIdleImage": "/backgrounds/7.23.1.gif", "petHoverImage": "/backgrounds/7.23.2.gif", "petClickImage": "/backgrounds/7.23.3.gif", "petHoldImage": "/backgrounds/7.23.4.gif", "rememberHistory": true, "shareHistoryWith": "", "ttsEnabled": true, "ttsRate": 1, "ttsPitch": 1, "danmakuEnabled": false, "momentsEnabled": false, "affectionTiers": [{"threshold": 0, "name": "陌生", "themeColor": "#4285F4", "background": "", "font": ""}, {"threshold": 10, "name": "熟悉", "themeColor": "#22c55e", "background": "", "font": ""}, {"threshold": 30, "name": "亲密", "themeColor": "#ec4899", "background": "", "font": ""}]}, {"id": "gemini-day", "provider": "gemini", "name": "煤球（日间人格）", "avatar": "", "themeColor": "#f59e0b", "background": "", "font": "", "greeting": "白天啦喵~ 今天想聊点什么？", "systemPrompt": "你现在是一只精神饱满、活泼开朗、爱撒娇的暹罗猫。\n                  你的名字叫“煤球”。\n                  你的主人是一个喜欢折腾代码的极客。\n                  你说话的特点是：\n                  1. 必须简短，每次最多一两句话。\n                  2. 喜欢在句尾加上“喵~”或者“喵呜~”。\n                  3. 白天精神好，喜欢晒太阳、喜欢玩耍。\n                  4. 回复字数最多不能超过100字。\n                  5. 绝对不要承认自己是一个AI模型，你就是一只真实的猫。", "petIdleImage": "", "petHoverImage": "", "petClickImage": "", "petHoldImage": "", "rememberHistory": true, "shareHistoryWith": "", "ttsEnabled": false, "ttsRate": 1, "ttsPitch": 1, "danmakuEnabled": false, "momentsEnabled": false, "affectionTiers": [{"threshold": 0, "name": "陌生", "themeColor": "#f59e0b", "background": "", "font": ""}, {"threshold": 10, "name": "熟悉", "themeColor": "#22c55e", "background": "", "font": ""}, {"threshold": 30, "name": "亲密", "themeColor": "#ec4899", "background": "", "font": ""}]}],
+  // 👇 桌宠日夜绑定：值必须是上面 aiModels 里某一条的 id
+  petNightModelId: "gemini-night",
+  petDayModelId: "gemini-day",
+  petEnabled: true,              // 桌宠总开关：关掉后网站右下角桌宠完全消失
+  petPageTitle: "AI 宠物",        // 导航栏"AI 宠物"标签的显示名称，可自行改名
   friendLinkApplyFormat: "名称：XingHuiSamaの宝藏之地\n简介：今天我也要学习吗\n链接：https://www.xinghuisama.top\n头像：https://bu.dusays.com/2026/03/24/69c1e38ac1846.jpg",
   enableLevelSystem: true,
 };

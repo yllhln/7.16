@@ -10,7 +10,7 @@ export const runtime = 'edge';
 
 export async function POST(req: Request) {
   try {
-    const { modelId, message, systemPrompt } = await req.json();
+    const { modelId, message, systemPrompt, fileBase64, fileMimeType } = await req.json();
 
     if (!modelId || typeof modelId !== 'string') {
       return new Response(JSON.stringify({ error: '缺少 modelId 参数' }), { status: 400 });
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
       return new Response(JSON.stringify({ error: '缺少 message 参数' }), { status: 400 });
     }
 
-    const reply = await callAI(modelId, { message, systemPrompt });
+    const reply = await callAI(modelId, { message, systemPrompt, fileBase64, fileMimeType });
 
     return new Response(JSON.stringify({ reply }), {
       headers: { 'Content-Type': 'application/json' },
