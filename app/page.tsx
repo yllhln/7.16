@@ -7,12 +7,10 @@ import Navbar from '../components/Navbar';
 import PageTransition from '../components/PageTransition';
 import SearchBar from '../components/SearchBar';
 import { siteConfig } from '../siteConfig';
-import CloudPlayer from '../components/CloudPlayer';
 import ThemeToggleBlock from '../components/ThemeToggleBlock';
 import ProfileCard from '../components/ProfileCard';
 import SiteDashboard from '../components/SiteDashboard';
 import { albums } from '../data/albums';
-import LyricBar from '../components/LyricBar';
 import { ToastProvider } from '../components/ToastProvider';
 
 import LatestPostsCarousel from '../components/LatestPostsCarousel';
@@ -72,7 +70,7 @@ export default function Home() {
         const fullPath = path.join(chattersDirectory, fileName);
         const { data, content } = matter(fs.readFileSync(fullPath, 'utf8'));
         const rawDate = data.date || '1970-01-01';
-        const cover = data.cover || 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop';
+        const cover = data.cover || siteConfig.defaultPostCover;
         return { slug: fileName.replace(/\.md$/, ''), title: data.title || '碎片记录', description: data.description || content.substring(0, 60), cover: cover, date: rawDate, formattedDate: formatUpdateTime(rawDate) };
       }).sort((a, b) => {
         const dateA = new Date(a.date).getTime();
@@ -82,7 +80,7 @@ export default function Home() {
       });
     }
   } catch (e) {}
-  const top5Chatters = allChatters.length > 0 ? allChatters.slice(0, 5) : [{ slug: 'none', title: '暂无记录', description: '记录一段思绪...', cover: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop', date: '', formattedDate: '' }];
+  const top5Chatters = allChatters.length > 0 ? allChatters.slice(0, 5) : [{ slug: 'none', title: '暂无记录', description: '记录一段思绪...', cover: siteConfig.defaultPostCover, date: '', formattedDate: '' }];
 
   const chatterCount = allChatters.length;
   const realPhotoCount = albums.reduce((total, album) => total + album.photos.length, 0);
@@ -99,20 +97,9 @@ export default function Home() {
 
             <main className="flex flex-col gap-6 w-full mt-6">
 
-              {/* 第一行：个人信息 + 播放器 */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">
-                {/* 手机上占满1列，电脑上占7列 */}
-                <div className="col-span-1 lg:col-span-7 flex flex-col">
-                    <ProfileCard postCount={allPosts.length} chatterCount={chatterCount} photoCount={realPhotoCount}/>
-                </div>
-                {/* 手机上占满1列，电脑上占5列 */}
-                <div className="col-span-1 lg:col-span-5 flex flex-col">
-                    <CloudPlayer/>
-                </div>
+              <div className="w-full">
+                <ProfileCard postCount={allPosts.length} chatterCount={chatterCount} photoCount={realPhotoCount}/>
               </div>
-
-              {/* 歌词栏 */}
-              <div className="w-full mt-[-10px]"><LyricBar/></div>
 
               {/* 第二行：文章轮播 + 照片墙 + 说说 + 主题切换 */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">

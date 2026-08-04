@@ -1,8 +1,7 @@
-import { siteConfig } from "@/siteConfig";
 import PetClient from "./PetClient";
 
 export const metadata = {
-  title: (siteConfig.petPageTitle || "AI 宠物") + " | " + siteConfig.title,
+  title: "AI 宠物 | XingHuiSama",
 };
 
 export default function PetPage() {

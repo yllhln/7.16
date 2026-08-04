@@ -13,6 +13,7 @@
 type ChatParams = {
   message: string;
   systemPrompt?: string;
+  remoteModel?: string;
   // 👇 【AI 宠物"发文件"功能】图片走多模态：base64 编码 + MIME 类型
   fileBase64?: string;
   fileMimeType?: string;
@@ -21,15 +22,15 @@ type ChatParams = {
 type ProviderHandler = (params: ChatParams) => Promise<string>;
 
 // --- 🔮 Gemini（谷歌）---
-const callGemini: ProviderHandler = async ({ message, systemPrompt, fileBase64, fileMimeType }) => {
+const callGemini: ProviderHandler = async ({ message, systemPrompt, fileBase64, fileMimeType, remoteModel }) => {
   const apiKey = (process.env.GEMINI_API_KEY || '').trim();
   if (!apiKey) throw new Error('未配置 GEMINI_API_KEY 环境变量');
 
-  const modelId = process.env.GEMINI_AI_PAGE_MODEL || 'gemini-2.5-flash-lite';
+  const modelId = remoteModel || process.env.GEMINI_AI_PAGE_MODEL || 'gemini-2.5-flash-lite';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`;
 
   // 🌟 有图片就一起塞进 parts 里（Gemini 原生支持文字+图片混合输入）
-  const parts: any[] = [{ text: message }];
+  const parts: Array<{ text?: string; inline_data?: { mime_type: string; data: string } }> = [{ text: message }];
   if (fileBase64 && fileMimeType) {
     parts.push({ inline_data: { mime_type: fileMimeType, data: fileBase64 } });
   }

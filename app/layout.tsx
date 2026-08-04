@@ -4,14 +4,11 @@ import { Geist, Geist_Mono, Noto_Serif_SC } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../components/ThemeProvider";
 import BackgroundEffects from "../components/BackgroundEffects";
-import { MusicProvider } from "../components/MusicProvider";
-import FloatingPlayer from "../components/FloatingPlayer";
 import { siteConfig } from "../siteConfig";
 import ClickEffect from "../components/ClickEffect";
 import BackgroundSlider from "../components/BackgroundSlider";
 import GlobalToolbox from "../components/GlobalToolbox";
 import SplashScreen from "../components/SplashScreen";
-import CyberCat from '../components/CyberCat';
 import DanmakuBackground from '../components/DanmakuBackground';
 
 import MobileBackButton from '../components/MobileBackButton';
@@ -67,8 +64,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
           <SplashScreen />
 
-          <MusicProvider>
-            <div id="app-mount-root" className="flex-1 flex flex-col transition-opacity duration-1000">
+          <div id="app-mount-root" className="flex-1 flex flex-col transition-opacity duration-1000">
               <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
                 {!siteConfig.useGradient && <BackgroundSlider />}
                 <div className="absolute inset-0 z-[-9] bg-white/30 dark:bg-slate-900/40 backdrop-blur-md transition-colors duration-1000"></div>
@@ -102,10 +98,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               </div>
 
               <div className="hidden md:block">
-                <FloatingPlayer />
-              </div>
-
-              <div className="hidden md:block">
                 <GlobalToolbox />
               </div>
 
@@ -117,20 +109,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <div className="hidden md:block">
                 <ClickEffect />
               </div>
-            </div>
+          </div>
 
-            <style suppressHydrationWarning dangerouslySetInnerHTML={{ __html: `
+          <style suppressHydrationWarning dangerouslySetInnerHTML={{ __html: `
               @keyframes gradientMove { 
                 0% { background-position: 0% 50%; } 
                 50% { background-position: 100% 50%; } 
                 100% { background-position: 0% 50%; } 
               }
             `}} />
-          </MusicProvider>
-
-          <div className="hidden md:block">
-            <CyberCat />
-          </div>
 
         </ThemeProvider>
       </body>

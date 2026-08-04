@@ -5,6 +5,7 @@
 // 全部由 lib/aiProviders.ts 里的注册表决定。
 
 import { callAI } from '@/lib/aiProviders';
+import { getAIModel } from '@/data/aiModels';
 
 export const runtime = 'edge';
 
@@ -19,12 +20,18 @@ export async function POST(req: Request) {
       return new Response(JSON.stringify({ error: '缺少 message 参数' }), { status: 400 });
     }
 
-    const reply = await callAI(modelId, { message, systemPrompt, fileBase64, fileMimeType });
+    const model = getAIModel(modelId);
+    if (!model) {
+      return new Response(JSON.stringify({ error: 'Unsupported AI model' }), { status: 400 });
+    }
+
+    const reply = await callAI(model.provider, { message, systemPrompt, fileBase64, fileMimeType, remoteModel: model.remoteModel });
 
     return new Response(JSON.stringify({ reply }), {
       headers: { 'Content-Type': 'application/json' },
     });
-  } catch (error: any) {
-    return new Response(JSON.stringify({ error: error.message || '未知错误' }), { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : '未知错误';
+    return new Response(JSON.stringify({ error: message }), { status: 500 });
   }
 }

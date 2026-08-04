@@ -1,192 +1,125 @@
 "use client";
 
-import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Navbar from '../../components/Navbar';
-import PageTransition from '../../components/PageTransition';
-import { siteConfig } from '../../siteConfig';
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { FileUp, Send, Trash2 } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import { aiModels, defaultAIModelId, getAIModel } from "@/data/aiModels";
+import { loadLocal, saveLocal, type StoredMessage } from "@/lib/localChat";
 
-type ChatMessage = {
-  role: 'user' | 'ai';
-  text: string;
-};
-
-// 🌟 兜底：万一 siteConfig.aiModels 没配置或者是空数组，页面也不会崩
-const aiModels = siteConfig.aiModels && siteConfig.aiModels.length > 0
-  ? siteConfig.aiModels
-  : [{ id: 'gemini', name: 'AI 助理', avatar: '', themeColor: '#6366f1', background: '', greeting: '你好呀，有什么想聊的吗？' }];
+type Attachment = { name: string; text?: string; base64?: string; mimeType?: string };
 
 export default function AIClient() {
-  const [selectedId, setSelectedId] = useState(aiModels[0].id);
-  // 🌟 每个模型的对话记录各自独立保存，切换模型时互不干扰
-  const [historyMap, setHistoryMap] = useState<Record<string, ChatMessage[]>>({});
-  const [inputValue, setInputValue] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
+  const [modelId, setModelId] = useState(defaultAIModelId);
+  const [messages, setMessages] = useState<StoredMessage[]>([]);
+  const [input, setInput] = useState("");
+  const [attachment, setAttachment] = useState<Attachment | null>(null);
+  const [loading, setLoading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const model = getAIModel(modelId) || aiModels[0];
 
-  const activeModel = aiModels.find(m => m.id === selectedId) || aiModels[0];
-  const messages = historyMap[selectedId] || [];
-
-  // 首次切到某个模型时，塞入它的欢迎语
   useEffect(() => {
-    setHistoryMap(prev => {
-      if (prev[selectedId]) return prev; // 已经有记录了，不重复塞欢迎语
-      return {
-        ...prev,
-        [selectedId]: activeModel.greeting ? [{ role: 'ai', text: activeModel.greeting }] : [],
+    setMessages(loadLocal("ai-history", modelId, []));
+  }, [modelId]);
+
+  useEffect(() => {
+    saveLocal("ai-history", modelId, messages);
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages, modelId, loading]);
+
+  const addMessage = (message: StoredMessage) => setMessages((current) => [...current, message]);
+
+  const selectFile = (file?: File) => {
+    if (!file) return;
+    if (file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const value = String(reader.result || "");
+        setAttachment({ name: file.name, base64: value.split(",")[1], mimeType: file.type });
       };
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedId]);
-
-  // 有新消息时自动滚动到底部
-  useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
-  }, [messages, isLoading]);
-
-  const appendMessage = (modelId: string, msg: ChatMessage) => {
-    setHistoryMap(prev => ({
-      ...prev,
-      [modelId]: [...(prev[modelId] || []), msg],
-    }));
+      reader.readAsDataURL(file);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => setAttachment({ name: file.name, text: String(reader.result || "") });
+    reader.readAsText(file);
   };
 
-  const handleSend = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const text = inputValue.trim();
-    if (!text || isLoading) return;
+  const send = async (event: FormEvent) => {
+    event.preventDefault();
+    const text = input.trim();
+    if ((!text && !attachment) || loading) return;
 
-    setInputValue('');
-    appendMessage(selectedId, { role: 'user', text });
-    setIsLoading(true);
+    const requestAttachment = attachment;
+    const message = requestAttachment?.text ? `${text}\n\n[Attachment: ${requestAttachment.name}]\n${requestAttachment.text}` : text;
+    addMessage({ id: crypto.randomUUID(), role: "user", text: text || "Attachment sent", attachmentName: requestAttachment?.name });
+    setInput("");
+    setAttachment(null);
+    setLoading(true);
 
     try {
-      const res = await fetch('/api/ai-chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ modelId: selectedId, message: text }),
+      const response = await fetch("/api/ai-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ modelId, message: message || "Please inspect the attached image.", fileBase64: requestAttachment?.base64, fileMimeType: requestAttachment?.mimeType }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'AI 请求失败');
-      appendMessage(selectedId, { role: 'ai', text: data.reply });
-    } catch (err: any) {
-      appendMessage(selectedId, { role: 'ai', text: `⚠️ 出错了喵：${err.message}` });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Request failed");
+      addMessage({ id: crypto.randomUUID(), role: "assistant", text: data.reply });
+    } catch (error) {
+      addMessage({ id: crypto.randomUUID(), role: "assistant", text: `Request failed: ${error instanceof Error ? error.message : "Unknown error"}` });
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  const accent = activeModel.themeColor || '#6366f1';
-
   return (
-    <div
-      className="min-h-screen relative pb-10 flex flex-col"
-      style={activeModel.background ? {
-        backgroundImage: `url('${activeModel.background}')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      } : undefined}
-    >
+    <main className="min-h-screen bg-slate-950 text-slate-100">
       <Navbar />
-
-      <PageTransition>
-        <div className="w-[90%] max-w-3xl mx-auto pt-28 flex flex-col flex-1">
-
-          {/* 🌟 模型切换标签：目前只有一款，以后加了新模型会自动多出标签 */}
-          {aiModels.length > 1 && (
-            <div className="flex gap-2 mb-6 flex-wrap">
-              {aiModels.map(model => {
-                const isActive = model.id === selectedId;
-                return (
-                  <button
-                    key={model.id}
-                    onClick={() => setSelectedId(model.id)}
-                    className={`px-4 py-2 rounded-2xl text-sm font-black transition-all border ${
-                      isActive
-                        ? 'text-white shadow-lg border-transparent'
-                        : 'bg-white/50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
-                    }`}
-                    style={isActive ? { backgroundColor: model.themeColor || '#6366f1' } : undefined}
-                  >
-                    {model.name}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-
-          {/* 🌟 聊天面板 */}
-          <div className="bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl border border-white/50 dark:border-slate-800/50 rounded-[32px] shadow-xl flex flex-col flex-1 overflow-hidden">
-
-            {/* 头部：当前模型信息 */}
-            <div
-              className="px-6 py-4 flex items-center gap-3 border-b border-white/40 dark:border-slate-700/50"
-              style={{ backgroundColor: `${accent}1A` /* 主题色 10% 透明度做底色 */ }}
-            >
-              <div
-                className="w-9 h-9 rounded-full flex items-center justify-center text-white font-black text-sm flex-shrink-0 overflow-hidden"
-                style={{ backgroundColor: accent }}
-              >
-                {activeModel.avatar
-                  ? <img src={activeModel.avatar} alt={activeModel.name} className="w-full h-full object-cover" />
-                  : activeModel.name.slice(0, 1)}
-              </div>
-              <div>
-                <p className="font-black text-slate-800 dark:text-white text-sm">{activeModel.name}</p>
-                <p className="text-[11px] text-slate-400">在线 · 随时可以聊</p>
-              </div>
-            </div>
-
-            {/* 消息列表 */}
-            <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-6 space-y-4 custom-scrollbar min-h-[360px] max-h-[55vh]">
-              {messages.map((msg, i) => (
-                <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div
-                    className={`max-w-[75%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed break-words ${
-                      msg.role === 'user'
-                        ? 'text-white rounded-br-md'
-                        : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-bl-md shadow-sm'
-                    }`}
-                    style={msg.role === 'user' ? { backgroundColor: accent } : undefined}
-                  >
-                    {msg.text}
-                  </div>
-                </div>
-              ))}
-
-              {isLoading && (
-                <div className="flex justify-start">
-                  <div className="bg-white dark:bg-slate-800 px-4 py-2.5 rounded-2xl rounded-bl-md shadow-sm text-sm text-slate-400">
-                    思考中...
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* 输入区 */}
-            <form onSubmit={handleSend} className="px-4 py-4 border-t border-white/40 dark:border-slate-700/50 flex items-center gap-2">
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder={`跟 ${activeModel.name} 说点什么...`}
-                disabled={isLoading}
-                className="flex-1 bg-white/60 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-2.5 text-sm outline-none focus:ring-2 dark:text-white"
-                style={{ boxShadow: 'none' }}
-              />
-              <button
-                type="submit"
-                disabled={isLoading || !inputValue.trim()}
-                className="px-5 py-2.5 rounded-2xl text-sm font-black text-white transition-opacity disabled:opacity-40"
-                style={{ backgroundColor: accent }}
-              >
-                发送
-              </button>
-            </form>
+      <section className="mx-auto flex min-h-screen max-w-7xl flex-col px-4 pb-5 pt-24 sm:px-8">
+        <header className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-300">AI workspace</p>
+            <h1 className="text-2xl font-bold">Chat without a persona</h1>
           </div>
+          <div className="flex max-w-full gap-2 overflow-x-auto pb-1">
+            {aiModels.map((item) => (
+              <button key={item.id} onClick={() => setModelId(item.id)} className={`shrink-0 border px-3 py-2 text-left text-sm transition ${item.id === modelId ? "border-transparent bg-white text-slate-950" : "border-white/15 bg-white/5 hover:bg-white/10"}`}>
+                <span className="block font-semibold">{item.name}</span>
+                <span className="block text-xs opacity-65">{item.description}</span>
+              </button>
+            ))}
+          </div>
+        </header>
+
+        <div className="flex min-h-0 flex-1 flex-col border border-white/10 bg-slate-900/60 shadow-2xl">
+          <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
+            <span className="font-medium" style={{ color: model.accent }}>{model.name}</span>
+            <button onClick={() => setMessages([])} className="inline-flex h-9 w-9 items-center justify-center text-slate-400 hover:bg-white/10 hover:text-white" title="Clear local history"><Trash2 size={17} /></button>
+          </div>
+          <div ref={scrollRef} className="min-h-[50vh] flex-1 space-y-5 overflow-y-auto px-4 py-6 sm:px-8">
+            {messages.length === 0 ? <p className="mx-auto mt-24 max-w-md text-center text-sm leading-7 text-slate-400">Choose a model and start a conversation. Your history stays in this browser only.</p> : null}
+            {messages.map((message) => (
+              <article key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+                <div className={`max-w-[88%] whitespace-pre-wrap px-4 py-3 text-sm leading-7 sm:max-w-[70%] ${message.role === "user" ? "bg-teal-700 text-white" : "bg-white/10 text-slate-100"}`}>
+                  {message.attachmentName ? <p className="mb-2 text-xs text-teal-200">Attachment: {message.attachmentName}</p> : null}
+                  {message.text}
+                </div>
+              </article>
+            ))}
+            {loading ? <p className="text-sm text-slate-400">Thinking...</p> : null}
+          </div>
+          <form onSubmit={send} className="border-t border-white/10 bg-slate-950/60 p-3 sm:p-4">
+            {attachment ? <div className="mb-2 flex items-center justify-between bg-white/10 px-3 py-2 text-xs"><span>{attachment.name}</span><button type="button" onClick={() => setAttachment(null)}>Remove</button></div> : null}
+            <div className="flex items-end gap-2">
+              <input ref={fileRef} type="file" className="hidden" onChange={(event) => selectFile(event.target.files?.[0])} />
+              <button type="button" onClick={() => fileRef.current?.click()} className="flex h-11 w-11 shrink-0 items-center justify-center border border-white/15 hover:bg-white/10" title="Attach a file"><FileUp size={18} /></button>
+              <textarea value={input} onChange={(event) => setInput(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void send(event); } }} rows={1} placeholder={`Message ${model.name}`} className="max-h-40 min-h-11 flex-1 resize-y bg-white/10 px-3 py-2.5 text-sm outline-none focus:ring-1 focus:ring-teal-400" />
+              <button disabled={loading || (!input.trim() && !attachment)} className="flex h-11 w-11 shrink-0 items-center justify-center text-white disabled:opacity-40" style={{ background: model.accent }} title="Send"><Send size={18} /></button>
+            </div>
+          </form>
         </div>
-      </PageTransition>
-    </div>
+      </section>
+    </main>
   );
 }

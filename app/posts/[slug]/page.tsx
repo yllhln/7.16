@@ -22,7 +22,6 @@ import ClientSocials from '../../../components/ClientSocials';
 import ClientTOC from '../../../components/ClientTOC';
 import BackButton from '../../../components/BackButton';
 import Comments from '../../../components/Comments';
-import SidebarLyric from '../../../components/SidebarLyric';
 
 export async function generateStaticParams() {
   const postsDirectory = path.join(process.cwd(), 'posts');
@@ -276,8 +275,6 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
               <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium mb-4">{siteConfig.bio}</p>
               <ClientSocials />
             </div>
-
-            <SidebarLyric />
 
             <div className="bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl rounded-3xl p-6 border border-white/40 dark:border-white/10 shadow-xl">
               <h3 className="font-black text-slate-900 dark:text-white mb-4 border-l-4 border-indigo-500 pl-2 text-sm">RECOMMENDED</h3>
