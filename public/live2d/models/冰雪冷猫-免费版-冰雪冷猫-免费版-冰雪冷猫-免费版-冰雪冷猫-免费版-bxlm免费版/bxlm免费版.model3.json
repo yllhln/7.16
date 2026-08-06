@@ -1,0 +1,28 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "bxlm免费版.moc3",
+		"Textures": [
+			"bxlm免费版.8192/texture_00.png",
+			"bxlm免费版.8192/texture_01.png",
+			"bxlm免费版.8192/texture_02.png"
+		],
+		"Physics": "bxlm免费版.physics3.json",
+		"DisplayInfo": "bxlm免费版.cdi3.json"
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": [
+				"ParamEyeLOpen",
+				"ParamEyeROpen"
+			]
+		},
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		}
+	]
+}

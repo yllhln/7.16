@@ -1,0 +1,15 @@
+{
+    "Type": "Live2D Expression",
+    "Parameters": [
+        {
+            "Id": "tearButton2",
+            "Value": 1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "tearButton3",
+            "Value": 1.0,
+            "Blend": "Add"
+        }
+    ]
+}

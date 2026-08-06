@@ -1,0 +1,38 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "玳瑁猫v1_vts.moc3",
+		"Textures": [
+			"玳瑁猫v1_vts.4096/texture_00.png",
+			"玳瑁猫v1_vts.4096/texture_01.png",
+			"玳瑁猫v1_vts.4096/texture_02.png",
+			"玳瑁猫v1_vts.4096/texture_03.png",
+			"玳瑁猫v1_vts.4096/texture_04.png",
+			"玳瑁猫v1_vts.4096/texture_05.png",
+			"玳瑁猫v1_vts.4096/texture_06.png",
+			"玳瑁猫v1_vts.4096/texture_07.png",
+			"玳瑁猫v1_vts.4096/texture_08.png",
+			"玳瑁猫v1_vts.4096/texture_09.png",
+			"玳瑁猫v1_vts.4096/texture_10.png",
+			"玳瑁猫v1_vts.4096/texture_11.png",
+			"玳瑁猫v1_vts.4096/texture_12.png"
+		],
+		"Physics": "玳瑁猫v1_vts.physics3.json",
+		"DisplayInfo": "玳瑁猫v1_vts.cdi3.json"
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": [
+				"ParamEyeLOpen",
+				"ParamEyeROpen"
+			]
+		},
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		}
+	]
+}

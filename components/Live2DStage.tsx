@@ -21,8 +21,10 @@ export default function Live2DStage({ pet, action, onReactToReady }: Props) {
     if (!ready || !definition) return;
     const preset = definition.presets[action] || definition.presets.idle;
     if (preset) applyExpression(preset);
-    playMotion(pet.live2d?.motions?.[action]);
-  }, [action, applyExpression, definition, pet.live2d?.motions, playMotion, ready]);
+    const motionGroup = pet.live2d?.motions?.[action]
+      || (action === "idle" ? pet.live2d?.idleGroup : action === "thinking" ? pet.live2d?.talkGroup : undefined);
+    playMotion(motionGroup);
+  }, [action, applyExpression, definition, pet.live2d?.idleGroup, pet.live2d?.motions, pet.live2d?.talkGroup, playMotion, ready]);
 
   useEffect(() => {
     onReactToReady?.(ready && definition ? reactTo : undefined);

@@ -12,7 +12,8 @@ export type Live2DModelDefinition = {
   id: string;
   name: string;
   enabled: boolean;
-  runtime: "cubism4";
+  runtime: "cubism4" | "cubism2";
+  modelFormat?: "model3" | "model";
   entryUrl: string;
   thumbnailUrl: string;
   notes?: string;

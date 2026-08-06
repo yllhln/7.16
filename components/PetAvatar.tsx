@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import type { PetAction, PetProfile } from "@/data/petProfiles";
+import { resolvePetAssetPath, type PetAction, type PetProfile } from "@/data/petProfiles";
 import Live2DStage from "@/components/Live2DStage";
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function PetAvatar({ pet, action, onLive2DReady }: Props) {
-  const image = pet.images[action] || pet.images.idle;
+  const image = resolvePetAssetPath(pet.images[action] || pet.images.idle);
 
   return (
     <div className="relative h-full w-full overflow-hidden" aria-label={`${pet.name} avatar`}>

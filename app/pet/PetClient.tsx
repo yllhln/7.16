@@ -5,7 +5,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { ArrowLeft, FileUp, Heart, Send, Volume2, VolumeX } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import PetAvatar from "@/components/PetAvatar";
-import { getPetProfile, petProfiles, type PetAction, type PetProfile } from "@/data/petProfiles";
+import { getPetProfile, petProfiles, resolvePetAssetPath, type PetAction, type PetProfile } from "@/data/petProfiles";
 import { loadLocal, saveLocal, type StoredMessage } from "@/lib/localChat";
 import { evaluateInteraction } from "@/lib/interactionRules";
 import { speakText, stopSpeaking } from "@/lib/tts";
@@ -119,7 +119,7 @@ export default function PetClient() {
               <button key={profile.id} onClick={() => choosePet(profile)} className="group relative grid min-h-72 overflow-hidden border border-white/10 bg-white/5 text-left transition hover:border-white/35 hover:bg-white/10 md:grid-cols-[0.9fr_1.1fr]">
                 <div className="relative min-h-44" style={{ background: `linear-gradient(135deg, ${profile.accent}55, transparent)` }}><PetAvatar pet={profile} action="idle" /></div>
                 <div className="flex flex-col justify-end p-6"><span className="text-xs uppercase tracking-[0.16em]" style={{ color: profile.accent }}>Open chat</span><strong className="mt-2 text-2xl">{profile.name}</strong><span className="mt-2 text-sm leading-6 text-slate-400">{profile.subtitle}</span></div>
-                {entering === profile.id ? <Image src={profile.transitionGif} alt="" fill unoptimized className="object-cover" /> : null}
+                {entering === profile.id ? <Image src={resolvePetAssetPath(profile.transitionGif)} alt="" fill unoptimized className="object-cover" /> : null}
               </button>
             ))}
           </div>
@@ -129,7 +129,7 @@ export default function PetClient() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100" style={{ backgroundImage: `linear-gradient(90deg, rgba(2,6,23,.96), rgba(2,6,23,.78)), url(${pet.background})`, backgroundSize: "cover", backgroundPosition: "center" }}>
+    <main className="min-h-screen bg-slate-950 text-slate-100" style={{ backgroundImage: `linear-gradient(90deg, rgba(2,6,23,.96), rgba(2,6,23,.78)), url(${resolvePetAssetPath(pet.background)})`, backgroundSize: "cover", backgroundPosition: "center" }}>
       <Navbar />
       <section className="mx-auto flex min-h-screen max-w-7xl flex-col px-4 pb-5 pt-24 sm:px-8">
         <header className="mb-3 flex items-center justify-between border-b border-white/10 pb-3"><button onClick={() => setSelectedId(null)} className="inline-flex items-center gap-2 text-sm text-slate-300 hover:text-white"><ArrowLeft size={16} /> Pets</button><div className="flex items-center gap-2"><button onClick={() => setTtsEnabled((value) => !value)} className="inline-flex h-9 w-9 items-center justify-center text-slate-300 hover:bg-white/10 hover:text-white" title={ttsEnabled ? "Disable voice" : "Enable voice"}>{ttsEnabled ? <Volume2 size={17} /> : <VolumeX size={17} />}</button><div className="flex items-center gap-2 text-sm" style={{ color: pet.accent }}><Heart size={16} fill="currentColor" /> {affection}/100</div></div></header>

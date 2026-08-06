@@ -13,7 +13,7 @@ export type PetProfile = {
   greeting: string;
   systemPrompt: string;
   keywordActions: Record<string, { action: PetAction; response: string; affection: number }>;
-  live2d?: { runtime: "cubism4"; modelFormat: "model3"; modelId?: string; modelUrl?: string; idleGroup: string; talkGroup: string; motions: Record<string, string> };
+  live2d?: { runtime: "cubism4" | "cubism2"; modelFormat: "model3" | "model"; modelId?: string; modelUrl?: string; idleGroup: string; talkGroup: string; motions: Record<string, string> };
   rules?: Array<{ id: string; when: Record<string, string | number>; action: PetAction; affection: number }>;
 };
 

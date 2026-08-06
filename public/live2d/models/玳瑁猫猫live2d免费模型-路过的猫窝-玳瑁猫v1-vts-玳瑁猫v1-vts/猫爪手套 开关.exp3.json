@@ -1,0 +1,15 @@
+{
+    "Type": "Live2D Expression",
+    "Parameters": [
+        {
+            "Id": "CoatButton2",
+            "Value": 1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "CoatButton3",
+            "Value": 1.0,
+            "Blend": "Add"
+        }
+    ]
+}
