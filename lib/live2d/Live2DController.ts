@@ -2,8 +2,27 @@
 
 import type { Live2DExpression, Live2DModelDefinition } from "@/data/live2dModels";
 
-type PixiApp = any;
-type Live2DModel = any;
+type CoreModel = {
+  getParameterValueById?: (id: string) => number;
+  setParameterValueById?: (id: string, value: number) => void;
+};
+
+type Live2DModelInstance = {
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+  scale: { set: (value: number) => void };
+  anchor: { set: (x: number, y: number) => void };
+  internalModel?: { coreModel?: CoreModel };
+  motion?: (group: string, index?: number, priority?: number) => void;
+  destroy?: () => void;
+};
+
+type PixiApp = {
+  stage: { addChild: (child: Live2DModelInstance) => void };
+  destroy: (removeView?: boolean, options?: { children?: boolean }) => void;
+};
 
 const CUBISM4_CORE_URL = "/live2d/runtime/cubism4/live2dcubismcore.min.js";
 
@@ -12,7 +31,7 @@ function easeInOutCubic(progress: number) {
 }
 
 async function ensureCubism4Core() {
-  if ((window as any).Live2DCubismCore) return;
+  if ((window as Window & { Live2DCubismCore?: unknown }).Live2DCubismCore) return;
   const existing = document.querySelector<HTMLScriptElement>('script[data-live2d-core="cubism4"]');
   if (existing) {
     await new Promise<void>((resolve, reject) => {
@@ -34,7 +53,7 @@ async function ensureCubism4Core() {
 
 export class Live2DController {
   private app: PixiApp | null = null;
-  private model: Live2DModel | null = null;
+  private model: Live2DModelInstance | null = null;
   private animationFrame: number | null = null;
   private resetTimer: number | null = null;
   private resizeHandler: (() => void) | null = null;
@@ -45,11 +64,13 @@ export class Live2DController {
     await ensureCubism4Core();
     const PIXI = await import("pixi.js");
     const { Live2DModel } = await import("pixi-live2d-display/cubism4");
-    (window as any).PIXI = PIXI;
+    (window as Window & { PIXI?: unknown }).PIXI = PIXI;
 
-    this.app = new PIXI.Application({ view: this.canvas, transparent: true, resizeTo: this.canvas.parentElement || window, antialias: true });
-    this.model = await Live2DModel.from(this.definition.entryUrl, { autoInteract: false });
-    this.app.stage.addChild(this.model);
+    const app = new PIXI.Application({ view: this.canvas, transparent: true, resizeTo: this.canvas.parentElement || window, antialias: true });
+    const model = await Live2DModel.from(this.definition.entryUrl, { autoInteract: false }) as Live2DModelInstance;
+    this.app = app as unknown as PixiApp;
+    this.model = model;
+    this.app.stage.addChild(model);
     this.resizeHandler = () => this.layout();
     window.addEventListener("resize", this.resizeHandler);
     this.layout();
@@ -77,7 +98,7 @@ export class Live2DController {
 
   playMotion(group?: string) {
     if (!group || !this.model) return;
-    try { this.model.motion(group, undefined, 2); } catch { /* Optional model motion groups may be absent. */ }
+    try { this.model.motion?.(group, undefined, 2); } catch { /* Optional model motion groups may be absent. */ }
   }
 
   applyExpression(expression: Live2DExpression) {
@@ -94,7 +115,7 @@ export class Live2DController {
     });
   }
 
-  private animate(core: any, from: Record<string, number>, to: Record<string, number>, durationMs: number, done?: () => void) {
+  private animate(core: CoreModel, from: Record<string, number>, to: Record<string, number>, durationMs: number, done?: () => void) {
     const start = performance.now();
     const tick = (now: number) => {
       const progress = Math.min(1, (now - start) / durationMs);

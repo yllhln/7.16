@@ -89,7 +89,8 @@ export async function generateExpression(text: string, model?: Live2DModelDefini
     });
     if (!response.ok) throw new Error(`Expression LLM failed with ${response.status}.`);
     const payload = await response.json();
-    return sanitizeExpression(extractJson(payload.choices?.[0]?.message?.content || ""), model);
+    const sanitized = sanitizeExpression(extractJson(payload.choices?.[0]?.message?.content || ""), model);
+    return Object.keys(sanitized.parameters).length ? sanitized : fallbackExpression(text, model);
   } catch {
     return fallbackExpression(text, model);
   }
