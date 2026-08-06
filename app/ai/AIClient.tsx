@@ -1,10 +1,11 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { FileUp, Send, Trash2 } from "lucide-react";
+import { FileUp, Send, Trash2, Volume2, VolumeX } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { aiModels, defaultAIModelId, getAIModel } from "@/data/aiModels";
 import { loadLocal, saveLocal, type StoredMessage } from "@/lib/localChat";
+import { speakText, stopSpeaking } from "@/lib/tts";
 
 type Attachment = { name: string; text?: string; base64?: string; mimeType?: string };
 
@@ -14,6 +15,7 @@ export default function AIClient() {
   const [input, setInput] = useState("");
   const [attachment, setAttachment] = useState<Attachment | null>(null);
   const [loading, setLoading] = useState(false);
+  const [ttsEnabled, setTtsEnabled] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const model = getAIModel(modelId) || aiModels[0];
@@ -26,6 +28,15 @@ export default function AIClient() {
     saveLocal("ai-history", modelId, messages);
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, modelId, loading]);
+
+  useEffect(() => {
+    setTtsEnabled(loadLocal("ai-tts", "enabled", false));
+  }, []);
+
+  useEffect(() => {
+    saveLocal("ai-tts", "enabled", ttsEnabled);
+    if (!ttsEnabled) stopSpeaking();
+  }, [ttsEnabled]);
 
   const addMessage = (message: StoredMessage) => setMessages((current) => [...current, message]);
 
@@ -66,6 +77,7 @@ export default function AIClient() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Request failed");
       addMessage({ id: crypto.randomUUID(), role: "assistant", text: data.reply });
+      void speakText(data.reply, ttsEnabled);
     } catch (error) {
       addMessage({ id: crypto.randomUUID(), role: "assistant", text: `Request failed: ${error instanceof Error ? error.message : "Unknown error"}` });
     } finally {
@@ -95,7 +107,7 @@ export default function AIClient() {
         <div className="flex min-h-0 flex-1 flex-col border border-white/10 bg-slate-900/60 shadow-2xl">
           <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
             <span className="font-medium" style={{ color: model.accent }}>{model.name}</span>
-            <button onClick={() => setMessages([])} className="inline-flex h-9 w-9 items-center justify-center text-slate-400 hover:bg-white/10 hover:text-white" title="Clear local history"><Trash2 size={17} /></button>
+            <div className="flex items-center gap-1"><button onClick={() => setTtsEnabled((value) => !value)} className="inline-flex h-9 w-9 items-center justify-center text-slate-400 hover:bg-white/10 hover:text-white" title={ttsEnabled ? "Disable voice" : "Enable voice"}>{ttsEnabled ? <Volume2 size={17} /> : <VolumeX size={17} />}</button><button onClick={() => setMessages([])} className="inline-flex h-9 w-9 items-center justify-center text-slate-400 hover:bg-white/10 hover:text-white" title="Clear local history"><Trash2 size={17} /></button></div>
           </div>
           <div ref={scrollRef} className="min-h-[50vh] flex-1 space-y-5 overflow-y-auto px-4 py-6 sm:px-8">
             {messages.length === 0 ? <p className="mx-auto mt-24 max-w-md text-center text-sm leading-7 text-slate-400">Choose a model and start a conversation. Your history stays in this browser only.</p> : null}

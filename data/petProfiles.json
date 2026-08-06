@@ -11,7 +11,7 @@
     "live2d": {
       "runtime": "cubism4",
       "modelFormat": "model3",
-      "modelUrl": "",
+      "modelId": "ichigo-14",
       "idleGroup": "idle",
       "talkGroup": "talk",
       "motions": { "idle": "idle", "thinking": "talk", "happy": "happy", "surprised": "surprised" }
@@ -45,7 +45,7 @@
     "avatar": "/assets/pets/muqiu/avatar.png",
     "previewImage": "/assets/pets/muqiu/idle.gif",
     "transitionGif": "/assets/pets/muqiu/transition.gif",
-    "live2d": { "runtime": "cubism4", "modelFormat": "model3", "modelUrl": "", "idleGroup": "idle", "talkGroup": "talk", "motions": { "idle": "idle", "thinking": "talk", "happy": "happy", "surprised": "surprised" } },
+    "live2d": { "runtime": "cubism4", "modelFormat": "model3", "modelId": "", "idleGroup": "idle", "talkGroup": "talk", "motions": { "idle": "idle", "thinking": "talk", "happy": "happy", "surprised": "surprised" } },
     "images": { "idle": "/assets/pets/muqiu/idle.gif", "thinking": "/assets/pets/muqiu/hover.gif", "happy": "/assets/pets/muqiu/happy.gif", "surprised": "/assets/pets/muqiu/fallback.png" },
     "greeting": "The room is calm. Tell me what is on your mind.",
     "systemPrompt": "You are Yuno, a calm virtual companion. Give supportive, practical, concise answers. Do not claim to have real-world experiences.",

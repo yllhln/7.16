@@ -242,9 +242,9 @@ const DijiangParticleModel = () => {
     let isMounted = true;
 
     // 如果你改了 bin 文件的名字，请在这里修改请求路径，例如： fetch('/12345.bin')
-    fetch('/spaceship.bin')
+    fetch('/assets/legacy/spaceship.bin')
       .then(res => {
-        if (!res.ok) throw new Error("Failed to fetch spaceship.bin");
+        if (!res.ok) throw new Error("Failed to fetch assets/legacy/spaceship.bin");
         return res.arrayBuffer();
       })
       .then(buffer => {
