@@ -21,6 +21,12 @@ import rawProfiles from "./petProfiles.json";
 
 export const petProfiles: PetProfile[] = rawProfiles as unknown as PetProfile[];
 
+export function resolvePetAssetPath(value: string) {
+  const path = String(value || "").trim().replace(/\\/g, "/");
+  if (!path || /^(?:https?:|data:|\/)/i.test(path)) return path;
+  return `/${path.replace(/^\.\/?/, "")}`;
+}
+
 export function getPetProfile(id: string) {
   return petProfiles.find((profile) => profile.id === id);
 }

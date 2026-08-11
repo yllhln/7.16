@@ -88,7 +88,7 @@ export default function PetClient() {
     setLoading(true);
     void live2dReactRef.current?.(text);
     try {
-      const response = await fetch("/api/ai-chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ modelId: "gemini-flash-lite", message: message || "Please inspect the attached image.", systemPrompt: pet.systemPrompt, fileBase64: requestAttachment?.base64, fileMimeType: requestAttachment?.mimeType }) });
+      const response = await fetch("/api/pet-chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ modelId: "gemini-flash-lite", message: message || "Please inspect the attached image.", systemPrompt: pet.systemPrompt, fileBase64: requestAttachment?.base64, fileMimeType: requestAttachment?.mimeType }) });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Request failed");
       const reply = trigger.response ? `${trigger.response}\n\n${data.reply}` : data.reply;
