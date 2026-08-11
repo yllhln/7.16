@@ -128,6 +128,17 @@ export class Live2DController {
     try { this.model.motion?.(group, undefined, 2); } catch { /* Optional model motion groups may be absent. */ }
   }
 
+  setParameterValue(id: string, value: number) {
+    const core = this.model?.internalModel?.coreModel;
+    if (!core) return;
+    if (core.setParameterValueById) core.setParameterValueById(id, value);
+    else core.setParamFloat?.(id, value);
+  }
+
+  setMouthOpen(value: number) {
+    this.setParameterValue("ParamMouthOpenY", Math.min(1, Math.max(0, value)));
+  }
+
   applyExpression(expression: Live2DExpression) {
     if (!this.model) return;
     if (this.animationFrame) cancelAnimationFrame(this.animationFrame);

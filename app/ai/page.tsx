@@ -1,10 +1,10 @@
 import { siteConfig } from "@/siteConfig";
-import AIClient from "./AIClient";
+import VTuberWidget from "@/components/VTuberWidget";
 
 export const metadata = {
   title: "AI | " + siteConfig.title,
 };
 
 export default function AIPage() {
-  return <AIClient />;
+  return <VTuberWidget />;
 }
