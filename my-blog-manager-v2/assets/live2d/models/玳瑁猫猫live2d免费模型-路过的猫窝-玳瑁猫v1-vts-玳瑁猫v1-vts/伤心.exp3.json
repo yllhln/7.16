@@ -1,0 +1,35 @@
+{
+    "Type": "Live2D Expression",
+    "Parameters": [
+        {
+            "Id": "EyeNormalButton3",
+            "Value": 3.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "BrowChangeButton2",
+            "Value": 1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "BrowChangeButton3",
+            "Value": 1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "earButton2",
+            "Value": 1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "smile",
+            "Value": 0.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "tearButton2",
+            "Value": 1.0,
+            "Blend": "Add"
+        }
+    ]
+}

@@ -1,0 +1,45 @@
+{
+    "Type": "Live2D Expression",
+    "Parameters": [
+        {
+            "Id": "HairButton6",
+            "Value": -1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "HairButton8",
+            "Value": -1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "HairButton7",
+            "Value": -1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "HairButton9",
+            "Value": -1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "HairButton10",
+            "Value": 1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "CoatButton",
+            "Value": 0.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "HairButton12",
+            "Value": 0.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "HairButton11",
+            "Value": 0.0,
+            "Blend": "Add"
+        }
+    ]
+}

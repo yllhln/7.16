@@ -1,0 +1,15 @@
+{
+    "Type": "Live2D Expression",
+    "Parameters": [
+        {
+            "Id": "syKBbutton",
+            "Value": 1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "syKBbutton2",
+            "Value": 1.0,
+            "Blend": "Add"
+        }
+    ]
+}

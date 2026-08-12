@@ -1,0 +1,18 @@
+[
+  {
+    "id": "gemini-flash-lite",
+    "provider": "gemini",
+    "remoteModel": "gemini-2.5-flash-lite",
+    "name": "Gemini Flash Lite",
+    "description": "Fast everyday conversation",
+    "accent": "#0f766e"
+  },
+  {
+    "id": "gemini-flash",
+    "provider": "gemini",
+    "remoteModel": "gemini-2.5-flash",
+    "name": "Gemini Flash",
+    "description": "More capable reasoning and writing",
+    "accent": "#c2410c"
+  }
+]

@@ -1,0 +1,20 @@
+{
+    "Type": "Live2D Expression",
+    "Parameters": [
+        {
+            "Id": "EyeNormalButton",
+            "Value": -1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "EyeNormalButton3",
+            "Value": 4.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "angryButton6",
+            "Value": 1.0,
+            "Blend": "Add"
+        }
+    ]
+}

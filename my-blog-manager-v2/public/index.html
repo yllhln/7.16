@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>星辉博客工作台</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand-mark">星</span>
+          <div>
+            <span class="eyebrow">LOCAL STUDIO</span>
+            <h1>星辉工作台 <em>v2</em></h1>
+          </div>
+        </div>
+
+        <nav class="main-nav" aria-label="工作台导航">
+          <button class="nav-item active" data-view="workbench"><span>01</span>实时工作台</button>
+          <button class="nav-item" data-view="content"><span>02</span>内容管理</button>
+          <button class="nav-item" data-view="ai"><span>03</span>AI 设置</button>
+          <button class="nav-item" data-view="pets"><span>04</span>AI 宠物</button>
+          <button class="nav-item" data-view="advanced"><span>05</span>高级数据</button>
+          <button class="nav-item" data-view="publish"><span>06</span>同步与发布</button>
+        </nav>
+
+        <div class="sidebar-note">
+          <span class="signal-dot"></span>
+          <div>
+            <strong>本地优先</strong>
+            <p>编辑与预览无需联网，发布时再连接云端。</p>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-area">
+        <header class="topbar">
+          <div>
+            <span class="eyebrow">XINGHUISAMA BLOGS</span>
+            <h2 id="view-title">实时工作台</h2>
+            <p id="view-description">一边看前端，一边调整设置，保存后立即呈现。</p>
+          </div>
+          <div id="global-status" class="global-status"><span></span><b>正在连接本地服务</b></div>
+        </header>
+
+        <section id="workbench-view" class="view active">
+          <div class="workbench-grid">
+            <article class="panel preview-panel">
+              <div class="panel-head preview-head">
+                <div>
+                  <span class="section-kicker">LIVE CANVAS</span>
+                  <h3>前端实时画面</h3>
+                </div>
+                <div class="preview-actions">
+                  <select id="preview-route" aria-label="预览页面">
+                    <option value="/">首页</option>
+                    <option value="/ai">AI 对话</option>
+                    <option value="/pet">AI 宠物</option>
+                    <option value="/posts">文章</option>
+                    <option value="/moments">说说</option>
+                    <option value="/chatter">杂谈</option>
+                  </select>
+                  <button id="refresh-preview" class="icon-button" title="刷新预览">刷新</button>
+                  <button id="fullscreen-preview" class="icon-button" title="独占全屏桌面预览">全屏</button>
+                  <button id="open-preview" class="icon-button" title="新窗口打开">新窗口</button>
+                </div>
+              </div>
+
+              <div class="preview-toolbar">
+                <div id="preview-state" class="preview-state"><span id="preview-dot"></span><b id="preview-state-text">尚未启动</b></div>
+                <div class="device-switcher" aria-label="预览尺寸">
+                  <button class="active" data-device="desktop">桌面</button>
+                  <button data-device="tablet">平板</button>
+                  <button data-device="mobile">手机</button>
+                </div>
+                <div class="preview-process-actions">
+                  <button id="start-preview" class="button small">启动</button>
+                  <button id="stop-preview" class="button small ghost">停止</button>
+                </div>
+              </div>
+
+              <div id="preview-stage" class="preview-stage desktop">
+                <div id="preview-placeholder" class="preview-placeholder">
+                  <div class="loader-orbit"><span></span></div>
+                  <strong>正在准备本地前端</strong>
+                  <p>首次启动通常需要几秒，之后修改代码会由前端自动更新。</p>
+                </div>
+                <iframe id="preview-frame" title="前端实时预览"></iframe>
+              </div>
+
+              <details class="preview-console">
+                <summary>查看前端运行记录</summary>
+                <pre id="preview-logs">等待启动...</pre>
+              </details>
+            </article>
+
+            <aside class="panel customization-panel">
+              <div class="panel-head">
+                <div>
+                  <span class="section-kicker">VISUAL SETTINGS</span>
+                  <h3>站点外观设置</h3>
+                </div>
+                <span class="autosync-badge">保存即应用</span>
+              </div>
+
+              <form id="customization-form" class="settings-form">
+                <fieldset>
+                  <legend>站点身份</legend>
+                  <label>网站标题<input name="title" type="text"></label>
+                  <label>作者名称<input name="authorName" type="text"></label>
+                  <label>个人简介<textarea name="bio" rows="3"></textarea></label>
+                  <label>站点图标路径<input name="faviconUrl" type="text" placeholder="/assets/site/favicon.png"></label>
+                  <label>头像路径<input name="avatarUrl" type="text" placeholder="/assets/pets/.../avatar.png"></label>
+                </fieldset>
+
+                <fieldset>
+                  <legend>导航文字</legend>
+                  <div class="form-grid three">
+                    <label>主标题<input name="navTitle" type="text"></label>
+                    <label>连接字<input name="navSuffix" type="text"></label>
+                    <label>结尾文字<input name="navAfter" type="text"></label>
+                  </div>
+                </fieldset>
+
+                <fieldset>
+                  <legend>色彩与背景</legend>
+                  <label class="toggle-row"><span><b>使用渐变背景</b><small>关闭时使用背景图片轮播</small></span><input name="useGradient" type="checkbox"></label>
+                  <div class="field-label">主题颜色</div>
+                  <div id="theme-colors" class="color-list"></div>
+                  <button id="add-theme-color" class="text-button" type="button">+ 添加颜色</button>
+                  <label>背景图片路径（每行一个）<textarea name="bgImages" rows="3" placeholder="/assets/site/background.png"></textarea></label>
+                  <label>AI 宠物页背景<input name="petPageBackground" type="text" placeholder="/assets/site/background.png"></label>
+                  <label>AI 页面背景<input name="aiPageBackground" type="text" placeholder="/assets/site/cover.png"></label>
+                  <label>默认文章封面<input name="defaultPostCover" type="text"></label>
+                  <label>照片墙图片<input name="photoWallImage" type="text"></label>
+                </fieldset>
+
+                <fieldset>
+                  <legend>内容页面</legend>
+                  <label>杂谈页标题<input name="chatterTitle" type="text"></label>
+                  <label>杂谈页说明<textarea name="chatterDescription" rows="2"></textarea></label>
+                  <label>弹幕文字（每行一个）<textarea name="danmakuList" rows="4"></textarea></label>
+                  <label>宠物页标题<input name="petPageTitle" type="text"></label>
+                  <label class="toggle-row"><span><b>启用好感等级</b><small>在 AI 宠物页面显示互动成长</small></span><input name="enableLevelSystem" type="checkbox"></label>
+                </fieldset>
+
+                <button class="button primary wide" type="submit">保存、同步并刷新画面</button>
+              </form>
+            </aside>
+          </div>
+        </section>
+
+        <section id="content-view" class="view">
+          <div class="section-toolbar">
+            <div class="segmented" id="document-types">
+              <button class="active" data-type="post">文章</button>
+              <button data-type="chatter">杂谈</button>
+              <button data-type="moment">说说</button>
+            </div>
+            <button id="new-document" class="button primary">新建内容</button>
+          </div>
+          <div class="content-grid">
+            <div id="document-list" class="panel document-list"></div>
+            <form id="document-form" class="panel editor-panel">
+              <div class="panel-head compact">
+                <div><span class="section-kicker">EDITOR</span><h3 id="editor-kind">新建文章</h3></div>
+                <button type="button" id="delete-document" class="button danger ghost">删除</button>
+              </div>
+              <label>文件标识<input id="doc-slug" type="text" placeholder="my-first-post"></label>
+              <label>标题<input id="doc-title" type="text"></label>
+              <label>摘要<input id="doc-description" type="text"></label>
+              <div class="form-grid two">
+                <label>日期<input id="doc-date" type="date"></label>
+                <label>标签<input id="doc-tags" type="text" placeholder="学习, 随笔"></label>
+              </div>
+              <label>本地封面路径<input id="doc-cover" type="text" placeholder="/assets/site/cover.png"></label>
+              <label>Markdown 内容<textarea id="doc-content" class="code-editor" rows="18"></textarea></label>
+              <button type="submit" class="button primary">保存并更新前端</button>
+            </form>
+          </div>
+        </section>
+
+        <section id="ai-view" class="view">
+          <form id="ai-chat-form" class="panel ai-chat-config">
+            <div class="panel-head compact">
+              <div><span class="section-kicker">VTUBER CHAT</span><h3>AI 聊天配置</h3></div>
+              <span class="autosync-badge">同步到 /ai</span>
+            </div>
+            <div class="form-grid two">
+              <label>助手名称<input name="assistantName" type="text" required maxlength="40"></label>
+              <label>默认 Live2D 模型<select name="defaultModelId" required></select></label>
+              <label>上下文消息数<input name="maxContextMessages" type="number" min="1" max="50" required></label>
+              <label>本地会话上限<input name="maxStoredSessions" type="number" min="1" max="50" required></label>
+            </div>
+            <label>系统提示词<textarea name="systemPrompt" rows="7" required></textarea></label>
+            <div class="editor-row ai-chat-actions">
+              <p class="field-hint">云端 LLM 与语音识别密钥继续由 Vercel 环境变量管理，不会写入此配置。</p>
+              <button class="button primary" type="submit">保存 AI 聊天配置</button>
+            </div>
+          </form>
+
+          <div class="section-toolbar">
+            <div><span class="section-kicker">PET MODEL PROVIDERS</span><h3>AI Pet 云模型</h3><p>这里只管理 AI Pet 的云模型，不影响新的 /ai 聊天页面。</p></div>
+            <button id="add-ai-model" class="button">添加模型</button>
+          </div>
+          <form id="ai-models-form">
+            <div id="ai-model-list" class="card-grid"></div>
+            <div class="sticky-save"><button class="button primary" type="submit">保存模型并刷新 AI Pet</button></div>
+          </form>
+        </section>
+
+        <section id="pets-view" class="view">
+          <div class="section-toolbar">
+            <div><span class="section-kicker">COMPANION LAB</span><h3>AI 宠物角色</h3><p>角色外观、Live2D、提示词、关键词动作和情绪规则集中管理。</p></div>
+            <button id="add-pet" class="button">添加宠物</button>
+          </div>
+          <div class="pet-workspace">
+            <div id="pet-selector" class="panel pet-selector"></div>
+            <form id="pet-form" class="panel pet-editor">
+              <div class="panel-head compact">
+                <div><span class="section-kicker">PET PROFILE</span><h3 id="pet-editor-title">宠物设置</h3></div>
+                <button id="delete-pet" type="button" class="button danger ghost">删除角色</button>
+              </div>
+              <div class="form-grid three">
+                <label>角色 ID<input name="id" type="text"></label>
+                <label>角色名称<input name="name" type="text"></label>
+              </div>
+              <label>角色简介<input name="subtitle" type="text"></label>
+              <div class="form-grid two">
+                <label>背景路径<input name="background" type="text"></label>
+                <label>头像路径<input name="avatar" type="text"></label>
+                <label>选择卡片静态图<input name="previewImage" type="text" placeholder="仅支持 .png、.jpg、.jpeg"></label>
+                <label>进入过渡 GIF<input name="transitionGif" type="text"></label>
+              </div>
+              <label>首次问候<textarea name="greeting" rows="2"></textarea></label>
+              <label>角色系统提示词<textarea name="systemPrompt" rows="4"></textarea></label>
+
+              <div class="subsection-title">Live2D 模型与动作</div>
+              <div class="form-grid three">
+                <label>运行时<input name="live2dRuntime" type="text" value="Cubism 4" readonly></label>
+                <label>模型格式<input name="modelFormat" type="text" value="model3.json" readonly></label>
+                <label>已注册模型<select name="live2dModelId"></select></label>
+                <label>待机动作组<input name="idleGroup" type="text"></label>
+                <label>说话动作组<input name="talkGroup" type="text"></label>
+              </div>
+              <p id="live2d-model-details" class="field-hint">选择模型后，前端会使用该模型及下方动作组。</p>
+              <div class="form-grid two">
+                <label>思考动作组<input name="thinkingGroup" type="text"></label>
+                <label>开心动作组<input name="happyGroup" type="text"></label>
+                <label>惊讶动作组<input name="surprisedGroup" type="text"></label>
+              </div>
+
+              <div class="subsection-title">互动规则</div>
+              <div class="editor-row"><span class="field-label">关键词动作</span><button id="add-keyword-action" type="button" class="text-button">添加关键词动作</button></div>
+              <div id="keyword-action-list" class="structured-list"></div>
+              <div class="editor-row"><span class="field-label">组合规则</span><button id="add-pet-rule" type="button" class="text-button">添加组合规则</button></div>
+              <div id="pet-rule-list" class="structured-list"></div>
+              <button class="button primary" type="submit">保存宠物并刷新宠物页面</button>
+            </form>
+          </div>
+        </section>
+
+        <section id="advanced-view" class="view">
+          <div class="section-toolbar">
+            <div class="segmented" id="advanced-tabs">
+              <button class="active" data-setting="albums">相册</button>
+              <button data-setting="friends">友链</button>
+              <button data-setting="projects">项目</button>
+              <button data-setting="live2d-models">Live2D 模型库</button>
+            </div>
+          </div>
+          <div class="panel raw-panel">
+            <div class="panel-head compact"><div><span class="section-kicker">ADVANCED DATA</span><h3 id="advanced-title">相册数据</h3></div><span class="caution-badge">高级编辑</span></div>
+            <p id="advanced-description">保留现有 TypeScript 导出结构。保存前会自动备份原文件。</p>
+            <textarea id="advanced-code-editor" class="code-editor" rows="25" spellcheck="false"></textarea>
+            <div id="advanced-editor" class="structured-list advanced-list" hidden></div>
+            <div class="editor-row advanced-actions"><button id="add-advanced-item" class="button ghost" type="button">添加项目</button><button id="scan-live2d-models" class="button ghost" type="button" hidden>扫描本地模型</button><button id="save-advanced" class="button primary" type="button">保存并更新前端</button></div>
+          </div>
+        </section>
+
+        <section id="publish-view" class="view">
+          <div class="publish-layout">
+            <div class="publish-main">
+              <article class="panel publish-card local-card">
+                <span class="step-number">01</span>
+                <div><span class="section-kicker">LOCAL FRONTEND</span><h3>应用到本地前端</h3><p>把控制台中的内容和配置同步到 XHBlogs，预览会随即更新。</p></div>
+                <button class="button primary" data-publish="local">立即同步本地</button>
+              </article>
+              <article class="panel publish-card">
+                <span class="step-number">02</span>
+                <div><span class="section-kicker">GITHUB</span><h3>提交并推送源码</h3><p>自动执行暂存、提交和推送。没有改动时只执行推送检查。</p><input id="commit-message" type="text" placeholder="更新博客内容与设置"></div>
+                <button class="button dark" data-publish="github">上传 GitHub</button>
+              </article>
+              <article class="panel publish-card">
+                <span class="step-number">03</span>
+                <div><span class="section-kicker">VERCEL</span><h3>部署正式站点</h3><p>使用当前本机 Vercel 登录状态执行生产部署。</p></div>
+                <button class="button accent" data-publish="vercel">部署 Vercel</button>
+              </article>
+            </div>
+
+            <aside class="publish-side">
+              <form id="publish-config" class="panel config-card">
+                <div class="panel-head compact"><div><span class="section-kicker">DESTINATION</span><h3>发布目标</h3></div></div>
+                <label>本地前端目录<input name="blogPath" type="text"></label>
+                <label>GitHub 仓库<input name="sourceRepoUrl" type="text"></label>
+                <label>分支<input name="sourceBranch" type="text"></label>
+                <button class="button ghost" type="submit">保存发布设置</button>
+              </form>
+              <article class="panel repo-status">
+                <div class="panel-head compact"><div><span class="section-kicker">REPOSITORY</span><h3>改动状态</h3></div><button id="refresh-publish" class="text-button">刷新</button></div>
+                <p><b>当前分支：</b><span id="publish-branch">-</span></p>
+                <p><b>远程仓库：</b><span id="publish-remote">-</span></p>
+                <div id="publish-changes" class="change-list"></div>
+              </article>
+            </aside>
+          </div>
+          <article class="panel output-panel">
+            <div class="panel-head compact"><div><span class="section-kicker">TASK OUTPUT</span><h3>执行结果</h3></div></div>
+            <pre id="publish-output">尚未执行发布任务。</pre>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast-region" class="toast-region" aria-live="polite"></div>
+    <script src="/app.js"></script>
+  </body>
+</html>
