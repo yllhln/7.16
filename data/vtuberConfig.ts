@@ -3,6 +3,7 @@ import rawConfig from "./vtuberConfig.json";
 type VTuberConfig = {
   assistantName?: string;
   defaultModelId?: string;
+  defaultAIModelId?: string;
   maxContextMessages?: number;
   maxStoredSessions?: number;
   systemPrompt?: string;
@@ -24,6 +25,7 @@ function boundedInteger(value: unknown, fallback: number) {
 export const vtuberConfig = {
   assistantName: config.assistantName?.trim() || "星语",
   defaultModelId: process.env.NEXT_PUBLIC_VTUBER_MODEL_ID || config.defaultModelId?.trim() || "ichigo-14",
+  defaultAIModelId: config.defaultAIModelId?.trim() || "",
   maxContextMessages: boundedInteger(config.maxContextMessages, 16),
   maxStoredSessions: boundedInteger(config.maxStoredSessions, 12),
   systemPrompt: config.systemPrompt?.trim() || DEFAULT_SYSTEM_PROMPT,

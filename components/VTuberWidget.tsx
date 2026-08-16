@@ -16,6 +16,7 @@ import {
 import Navbar from "@/components/Navbar";
 import Live2DCanvas from "@/components/Live2DCanvas";
 import { live2dModels } from "@/data/live2dModels";
+import { enabledAIModels } from "@/data/aiModels";
 import { vtuberConfig } from "@/data/vtuberConfig";
 import { useCloudVTuber } from "@/hooks/useCloudVTuber";
 import type { ImageAttachment } from "@/lib/vtuber/types";
@@ -52,6 +53,8 @@ export default function VTuberWidget() {
     setVoiceEnabled,
     modelId,
     setModelId,
+    aiModelId,
+    setAIModelId,
     expression,
     mouthOpen,
     error,
@@ -64,6 +67,12 @@ export default function VTuberWidget() {
   const fileRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const models = live2dModels.filter((model) => model.enabled);
+
+  useEffect(() => {
+    if (enabledAIModels.length && !enabledAIModels.some((model) => model.id === aiModelId)) {
+      setAIModelId(enabledAIModels[0].id);
+    }
+  }, [aiModelId, setAIModelId]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -84,9 +93,7 @@ export default function VTuberWidget() {
       try {
         const transcript = await stopRecording();
         if (transcript) setInput((current) => [current.trim(), transcript].filter(Boolean).join(" "));
-      } catch {
-        // Hook exposes the transcription error in the UI.
-      }
+      } catch {}
       return;
     }
     try {
@@ -141,7 +148,17 @@ export default function VTuberWidget() {
                 <button type="button" onClick={() => setHistoryOpen((value) => !value)} className="grid h-9 w-9 place-items-center text-slate-300 hover:bg-white/10 hover:text-white" title="对话历史"><History size={18} /></button>
                 <button type="button" onClick={createSession} className="grid h-9 w-9 place-items-center text-slate-300 hover:bg-white/10 hover:text-white" title="新建对话"><Plus size={18} /></button>
               </div>
-              <div className="min-w-0 truncate px-3 text-sm font-semibold text-slate-200">{activeSession?.title || "新对话"}</div>
+              <div className="flex min-w-0 flex-1 items-center justify-center gap-3 px-3">
+                <span className="min-w-0 truncate text-sm font-semibold text-slate-200">{activeSession?.title || "新对话"}</span>
+                <select
+                  value={aiModelId}
+                  onChange={(event) => setAIModelId(event.target.value)}
+                  className="max-w-44 border border-white/15 bg-slate-900 px-2 py-1 text-xs text-slate-200 outline-none focus:border-teal-400"
+                  aria-label="AI model"
+                >
+                  {enabledAIModels.map((model) => <option key={model.id} value={model.id}>{model.name}</option>)}
+                </select>
+              </div>
               <div className="flex items-center gap-1">
                 <button type="button" onClick={() => setVoiceEnabled((value) => !value)} className="grid h-9 w-9 place-items-center text-slate-300 hover:bg-white/10 hover:text-white" title={voiceEnabled ? "关闭语音" : "开启语音"}>{voiceEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}</button>
                 <button type="button" onClick={interrupt} disabled={!busy && !isSpeaking} className="grid h-9 w-9 place-items-center text-slate-300 hover:bg-rose-500/20 hover:text-rose-200 disabled:opacity-30" title="停止"><Square size={16} /></button>

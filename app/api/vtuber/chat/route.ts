@@ -1,3 +1,4 @@
+import { aiModels, getAIModel } from "@/data/aiModels";
 import { vtuberConfig } from "@/data/vtuberConfig";
 import { callCloudChat, getCloudChatStatus } from "@/lib/vtuber/cloud";
 import type { CloudChatMessage } from "@/lib/vtuber/types";
@@ -6,16 +7,22 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 export async function GET() {
-  return Response.json(getCloudChatStatus());
+  return Response.json(getCloudChatStatus(aiModels));
 }
 
 export async function POST(request: Request) {
   try {
     const body = await request.json() as {
       messages?: unknown;
+      modelId?: unknown;
       fileBase64?: unknown;
       fileMimeType?: unknown;
     };
+    const requestedModelId = typeof body.modelId === "string" ? body.modelId : vtuberConfig.defaultAIModelId;
+    const model = getAIModel(requestedModelId) || aiModels.find((item) => item.enabled !== false);
+    if (!model) {
+      return Response.json({ error: "没有可用的 AI 模型" }, { status: 400 });
+    }
     if (!Array.isArray(body.messages)) {
       return Response.json({ error: "messages is required" }, { status: 400 });
     }
@@ -37,6 +44,7 @@ export async function POST(request: Request) {
     const reply = await callCloudChat({
       messages,
       systemPrompt: vtuberConfig.systemPrompt,
+      model,
       fileBase64: typeof body.fileBase64 === "string" ? body.fileBase64 : undefined,
       fileMimeType: typeof body.fileMimeType === "string" ? body.fileMimeType : undefined,
     });

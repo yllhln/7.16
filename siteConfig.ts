@@ -10,6 +10,7 @@ export const siteConfig = {
   useGradient: false,
   themeColors: ["#0f766e", "#0f172a", "#c2410c", "#e2e8f0"],
   bgImages: ["/assets/site/background.png", "/assets/site/cover.png"],
+  aiPageBackground: "/assets/site/cover.png",
   defaultPostCover: "/assets/site/cover.png",
   photoWallImage: "/assets/site/background.png",
   social: { github: "https://github.com/heiehiehi", gitee: "https://github.com/heiehiehi", google: "mailto:bilibiliwuwuwu@gmail.com", email: "3295587260@qq.com", qq: "3295587260", wechat: "XingHuisama" },
@@ -21,7 +22,6 @@ export const siteConfig = {
   buildDate: "2026-03-23T00:00:00",
   footerBadges: [],
   icpConfig: { name: "萌ICP备 20260240号", link: "https://icp.gov.moe/?keyword=20260240" },
-  petPageTitle: "AI 宠物",
   friendLinkApplyFormat: "名称：XingHuiSama\n简介：今天我也要学习吗\n链接：https://www.xinghuisama.top\n头像：/assets/pets/muqiu/avatar.png",
   enableLevelSystem: true,
 };

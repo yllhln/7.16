@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { vtuberConfig } from "@/data/vtuberConfig";
+import { defaultAIModelId } from "@/data/aiModels";
 import type { Live2DExpression } from "@/data/live2dModels";
 import { SpeechPlayer } from "@/lib/vtuber/audio";
 import { createVtuberSession, loadVtuberSessions, saveVtuberSessions, titleFromMessage } from "@/lib/vtuber/history";
@@ -16,6 +17,7 @@ type RecordingState = {
 
 const VOICE_KEY = "xhblogs:vtuber:voice";
 const MODEL_KEY = "xhblogs:vtuber:model";
+const AI_MODEL_KEY = "xhblogs:vtuber:ai-model";
 
 export function useCloudVTuber() {
   const [sessions, setSessions] = useState<VtuberSession[]>([]);
@@ -27,6 +29,7 @@ export function useCloudVTuber() {
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [modelId, setModelId] = useState(vtuberConfig.defaultModelId);
+  const [aiModelId, setAIModelId] = useState(vtuberConfig.defaultAIModelId || defaultAIModelId);
   const [expression, setExpression] = useState<Live2DExpression | null>(null);
   const [mouthOpen, setMouthOpen] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -46,6 +49,7 @@ export function useCloudVTuber() {
       setActiveSessionId(initial[0].id);
       setVoiceEnabled(localStorage.getItem(VOICE_KEY) !== "false");
       setModelId(localStorage.getItem(MODEL_KEY) || vtuberConfig.defaultModelId);
+      setAIModelId(localStorage.getItem(AI_MODEL_KEY) || vtuberConfig.defaultAIModelId || defaultAIModelId);
       setHydrated(true);
     });
     void fetch("/api/vtuber/chat").then((response) => response.json()).then((data) => setServiceConfigured(Boolean(data.configured))).catch(() => setServiceConfigured(false));
@@ -61,12 +65,13 @@ export function useCloudVTuber() {
     if (!hydrated) return;
     localStorage.setItem(VOICE_KEY, String(voiceEnabled));
     localStorage.setItem(MODEL_KEY, modelId);
+    localStorage.setItem(AI_MODEL_KEY, aiModelId);
     if (!voiceEnabled) {
       speechRef.current.stop();
       setIsSpeaking(false);
       setMouthOpen(0);
     }
-  }, [hydrated, modelId, voiceEnabled]);
+  }, [aiModelId, hydrated, modelId, voiceEnabled]);
 
   useEffect(() => () => {
     abortRef.current?.abort();
@@ -145,6 +150,7 @@ export function useCloudVTuber() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: context,
+          modelId: aiModelId,
           fileBase64: attachment?.base64,
           fileMimeType: attachment?.mimeType,
         }),
@@ -183,7 +189,7 @@ export function useCloudVTuber() {
       setIsSpeaking(false);
       setMouthOpen(0);
     }
-  }, [activeSessionId, appendMessage, busy, interrupt, modelId, sessions, voiceEnabled]);
+  }, [activeSessionId, aiModelId, appendMessage, busy, interrupt, modelId, sessions, voiceEnabled]);
 
   const startRecording = useCallback(async () => {
     if (recordingRef.current || isTranscribing) return;
@@ -255,6 +261,8 @@ export function useCloudVTuber() {
     setVoiceEnabled,
     modelId,
     setModelId,
+    aiModelId,
+    setAIModelId,
     expression,
     mouthOpen,
     error,

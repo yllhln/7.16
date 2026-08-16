@@ -1,10 +1,12 @@
 import "server-only";
 
+import type { AIModel } from "@/data/aiModels";
 import type { CloudChatMessage } from "./types";
 
 type ChatInput = {
   messages: CloudChatMessage[];
   systemPrompt: string;
+  model: AIModel;
   fileBase64?: string;
   fileMimeType?: string;
 };
@@ -18,38 +20,19 @@ function cleanBaseUrl(value: string | undefined, fallback: string) {
   return (value?.trim() || fallback).replace(/\/$/, "");
 }
 
-type CloudChatProvider = "gemini" | "openai-compatible";
-
-function providerName(): CloudChatProvider {
-  const provider = process.env.AI_CHAT_PROVIDER?.trim().toLowerCase() || "gemini";
-  if (provider !== "gemini" && provider !== "openai-compatible") {
-    throw new Error(`不支持的 AI_CHAT_PROVIDER: ${provider}`);
-  }
-  return provider;
-}
-
-export function getCloudChatStatus() {
-  let provider: CloudChatProvider;
-  try {
-    provider = providerName();
-  } catch (error) {
-    return {
-      provider: process.env.AI_CHAT_PROVIDER?.trim().toLowerCase() || "gemini",
-      configured: false,
-      error: error instanceof Error ? error.message : "AI_CHAT_PROVIDER 配置无效",
-    };
-  }
-  const configured = provider === "gemini"
+export function getCloudChatStatus(models: AIModel[]) {
+  const providers = [...new Set(models.filter((model) => model.enabled !== false).map((model) => model.provider))];
+  const configured = providers.some((provider) => provider === "gemini"
     ? Boolean(process.env.GEMINI_API_KEY?.trim())
-    : Boolean(process.env.AI_CHAT_API_KEY?.trim() && process.env.AI_CHAT_MODEL?.trim());
-  return { provider, configured };
+    : Boolean(process.env.AI_CHAT_API_KEY?.trim()));
+  return { providers, configured };
 }
 
-async function callGemini({ messages, systemPrompt, fileBase64, fileMimeType }: ChatInput) {
+async function callGemini({ messages, systemPrompt, model, fileBase64, fileMimeType }: ChatInput) {
   const apiKey = process.env.GEMINI_API_KEY?.trim();
   if (!apiKey) throw new Error("未配置 GEMINI_API_KEY");
 
-  const model = process.env.AI_CHAT_MODEL?.trim() || "gemini-2.5-flash-lite";
+  const remoteModel = model.remoteModel.trim() || "gemini-2.5-flash-lite";
   const contents = messages.map((message, index) => {
     const parts: GeminiPart[] = [{ text: message.text }];
     const isLastUserMessage = message.role === "user" && index === messages.length - 1;
@@ -60,7 +43,7 @@ async function callGemini({ messages, systemPrompt, fileBase64, fileMimeType }: 
   });
 
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(remoteModel)}:generateContent?key=${encodeURIComponent(apiKey)}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -76,10 +59,10 @@ async function callGemini({ messages, systemPrompt, fileBase64, fileMimeType }: 
   return String(payload.candidates?.[0]?.content?.parts?.[0]?.text || "").trim();
 }
 
-async function callOpenAICompatible({ messages, systemPrompt, fileBase64, fileMimeType }: ChatInput) {
+async function callOpenAICompatible({ messages, systemPrompt, model, fileBase64, fileMimeType }: ChatInput) {
   const apiKey = process.env.AI_CHAT_API_KEY?.trim();
-  const model = process.env.AI_CHAT_MODEL?.trim();
-  if (!apiKey || !model) throw new Error("未配置 AI_CHAT_API_KEY 或 AI_CHAT_MODEL");
+  const remoteModel = model.remoteModel.trim();
+  if (!apiKey || !remoteModel) throw new Error("未配置 AI_CHAT_API_KEY 或远程模型名");
 
   const upstreamMessages = messages.map((message, index) => {
     const isLastUserMessage = message.role === "user" && index === messages.length - 1;
@@ -97,7 +80,7 @@ async function callOpenAICompatible({ messages, systemPrompt, fileBase64, fileMi
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
     body: JSON.stringify({
-      model,
+      model: remoteModel,
       temperature: 0.7,
       messages: [{ role: "system", content: systemPrompt }, ...upstreamMessages],
     }),
@@ -109,7 +92,7 @@ async function callOpenAICompatible({ messages, systemPrompt, fileBase64, fileMi
 }
 
 export async function callCloudChat(input: ChatInput) {
-  const reply = providerName() === "openai-compatible"
+  const reply = input.model.provider === "openai-compatible"
     ? await callOpenAICompatible(input)
     : await callGemini(input);
   if (!reply) throw new Error("云端模型没有返回内容");
