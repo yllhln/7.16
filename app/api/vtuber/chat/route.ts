@@ -5,6 +5,7 @@ import type { CloudChatMessage } from "@/lib/vtuber/types";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   return Response.json(getCloudChatStatus(aiModels));

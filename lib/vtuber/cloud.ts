@@ -20,19 +20,21 @@ function cleanBaseUrl(value: string | undefined, fallback: string) {
   return (value?.trim() || fallback).replace(/\/$/, "");
 }
 
+function getModelAuth(model: AIModel) {
+  const environmentName = model.apiKeyEnv?.trim() || (model.provider === "gemini" ? "GEMINI_API_KEY" : "AI_CHAT_API_KEY");
+  return { apiKey: process.env[environmentName]?.trim(), environmentName };
+}
+
 export function getCloudChatStatus(models: AIModel[]) {
-  const providers = [...new Set(models.filter((model) => model.enabled !== false).map((model) => model.provider))];
-  const configured = providers.some((provider) => {
-    if (provider === "gemini") return Boolean(process.env.GEMINI_API_KEY?.trim());
-    if (provider === "deepseek") return Boolean(process.env.DEEPSEEK_API_KEY?.trim() || process.env.AI_CHAT_API_KEY?.trim());
-    return Boolean(process.env.AI_CHAT_API_KEY?.trim());
-  });
+  const enabledModels = models.filter((model) => model.enabled !== false);
+  const providers = [...new Set(enabledModels.map((model) => model.provider))];
+  const configured = enabledModels.some((model) => Boolean(getModelAuth(model).apiKey));
   return { providers, configured };
 }
 
 async function callGemini({ messages, systemPrompt, model, fileBase64, fileMimeType }: ChatInput) {
-  const apiKey = process.env.GEMINI_API_KEY?.trim();
-  if (!apiKey) throw new Error("未配置 GEMINI_API_KEY");
+  const { apiKey, environmentName } = getModelAuth(model);
+  if (!apiKey) throw new Error(`未配置 ${environmentName}`);
 
   const remoteModel = model.remoteModel.trim() || "gemini-2.5-flash-lite";
   const contents = messages.map((message, index) => {
@@ -62,11 +64,10 @@ async function callGemini({ messages, systemPrompt, model, fileBase64, fileMimeT
 }
 
 async function callOpenAICompatible({ messages, systemPrompt, model, fileBase64, fileMimeType }: ChatInput) {
-  const isDeepSeek = model.provider === "deepseek";
-  const apiKey = (isDeepSeek ? process.env.DEEPSEEK_API_KEY || process.env.AI_CHAT_API_KEY : process.env.AI_CHAT_API_KEY)?.trim();
+  const { apiKey, environmentName } = getModelAuth(model);
   const remoteModel = model.remoteModel.trim();
   if (!apiKey || !remoteModel) {
-    throw new Error(isDeepSeek ? "未配置 DEEPSEEK_API_KEY 或远程模型名" : "未配置 AI_CHAT_API_KEY 或远程模型名");
+    throw new Error(`未配置 ${environmentName} 或远程模型名`);
   }
 
   const upstreamMessages = messages.map((message, index) => {
@@ -81,9 +82,7 @@ async function callOpenAICompatible({ messages, systemPrompt, model, fileBase64,
     };
   });
 
-  const baseUrl = isDeepSeek
-    ? cleanBaseUrl(process.env.DEEPSEEK_BASE_URL, "https://api.deepseek.com")
-    : cleanBaseUrl(process.env.AI_CHAT_BASE_URL, "https://api.openai.com/v1");
+  const baseUrl = cleanBaseUrl(model.baseUrl || process.env.AI_CHAT_BASE_URL, "https://api.openai.com/v1");
   const response = await fetch(`${baseUrl}/chat/completions`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
@@ -100,7 +99,7 @@ async function callOpenAICompatible({ messages, systemPrompt, model, fileBase64,
 }
 
 export async function callCloudChat(input: ChatInput) {
-  const reply = input.model.provider === "openai-compatible" || input.model.provider === "deepseek"
+  const reply = input.model.provider === "openai-compatible"
     ? await callOpenAICompatible(input)
     : await callGemini(input);
   if (!reply) throw new Error("云端模型没有返回内容");
