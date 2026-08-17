@@ -123,9 +123,20 @@ export class Live2DController {
     this.model.y = host.clientHeight * (1 + (this.definition.layout?.offsetY || 0));
   }
 
-  playMotion(group?: string) {
+  playMotion(group?: string, index?: number, priority?: number) {
     if (!group || !this.model) return;
-    try { this.model.motion?.(group, undefined, 2); } catch { /* Optional model motion groups may be absent. */ }
+    try { this.model.motion?.(group, index, priority ?? 2); } catch { /* Optional model motion groups may be absent. */ }
+  }
+
+  triggerFromText(text: string) {
+    const rules = Array.isArray(this.definition.triggers) ? this.definition.triggers : [];
+    const match = [...rules].sort((a, b) => (b.priority || 0) - (a.priority || 0)).find((rule) => {
+      if ((rule.keywords || []).some((keyword) => keyword && text.includes(keyword))) return true;
+      if (!rule.pattern) return false;
+      try { return new RegExp(rule.pattern, "i").test(text); } catch { return false; }
+    });
+    if (match?.preset && this.definition.presets[match.preset]) this.applyExpression(this.definition.presets[match.preset]);
+    if (match?.motionGroup) this.playMotion(match.motionGroup, match.motionIndex, match.priority);
   }
 
   setParameterValue(id: string, value: number) {

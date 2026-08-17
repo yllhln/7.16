@@ -8,9 +8,10 @@ type Props = {
   modelId: string;
   expression?: Live2DExpression | null;
   mouthOpen?: number;
+  triggerText?: string;
 };
 
-export default function Live2DCanvas({ modelId, expression, mouthOpen = 0 }: Props) {
+export default function Live2DCanvas({ modelId, expression, mouthOpen = 0, triggerText = "" }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const controllerRef = useRef<Live2DController | null>(null);
   const [loadedModelId, setLoadedModelId] = useState<string | null>(null);
@@ -43,6 +44,10 @@ export default function Live2DCanvas({ modelId, expression, mouthOpen = 0 }: Pro
   useEffect(() => {
     controllerRef.current?.setMouthOpen(mouthOpen);
   }, [mouthOpen]);
+
+  useEffect(() => {
+    if (triggerText) controllerRef.current?.triggerFromText(triggerText);
+  }, [triggerText]);
 
   return (
     <div className="absolute inset-0" aria-label="Live2D assistant">

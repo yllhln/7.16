@@ -56,6 +56,7 @@ export default function VTuberWidget() {
     aiModelId,
     setAIModelId,
     expression,
+    triggerText,
     mouthOpen,
     error,
     serviceConfigured,
@@ -135,7 +136,7 @@ export default function VTuberWidget() {
               <span className={`shrink-0 text-xs font-semibold ${serviceConfigured === false ? "text-amber-300" : "text-teal-300"}`}>{statusText}</span>
             </div>
             <div className="absolute inset-x-0 bottom-0 top-12">
-              <Live2DCanvas modelId={modelId} expression={expression} mouthOpen={mouthOpen} />
+              <Live2DCanvas modelId={modelId} expression={expression} mouthOpen={mouthOpen} triggerText={triggerText} />
             </div>
             <div className="absolute bottom-4 left-4 z-10">
               <h1 className="text-2xl font-bold text-white">{vtuberConfig.assistantName}</h1>
@@ -160,7 +161,7 @@ export default function VTuberWidget() {
                 </select>
               </div>
               <div className="flex items-center gap-1">
-                <button type="button" onClick={() => setVoiceEnabled((value) => !value)} className="grid h-9 w-9 place-items-center text-slate-300 hover:bg-white/10 hover:text-white" title={voiceEnabled ? "关闭语音" : "开启语音"}>{voiceEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}</button>
+                <button type="button" onClick={() => setVoiceEnabled((value) => !value)} disabled={!vtuberConfig.tts.enabled} className="grid h-9 w-9 place-items-center text-slate-300 hover:bg-white/10 hover:text-white disabled:opacity-30" title={!vtuberConfig.tts.enabled ? "TTS 已在工作台关闭" : voiceEnabled ? "关闭语音" : "开启语音"}>{voiceEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}</button>
                 <button type="button" onClick={interrupt} disabled={!busy && !isSpeaking} className="grid h-9 w-9 place-items-center text-slate-300 hover:bg-rose-500/20 hover:text-rose-200 disabled:opacity-30" title="停止"><Square size={16} /></button>
               </div>
             </header>

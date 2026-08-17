@@ -7,6 +7,16 @@ type VTuberConfig = {
   maxContextMessages?: number;
   maxStoredSessions?: number;
   systemPrompt?: string;
+  tts?: Partial<TTSConfig>;
+};
+
+export type TTSConfig = {
+  enabled: boolean;
+  provider: "auto" | "browser" | "remote";
+  voice: string;
+  rate: number;
+  pitch: number;
+  volume: number;
 };
 
 const DEFAULT_SYSTEM_PROMPT = [
@@ -22,6 +32,11 @@ function boundedInteger(value: unknown, fallback: number) {
   return Number.isInteger(parsed) ? Math.max(1, Math.min(50, parsed)) : fallback;
 }
 
+function boundedNumber(value: unknown, fallback: number, min: number, max: number) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? Math.max(min, Math.min(max, parsed)) : fallback;
+}
+
 export const vtuberConfig = {
   assistantName: config.assistantName?.trim() || "星语",
   defaultModelId: process.env.NEXT_PUBLIC_VTUBER_MODEL_ID || config.defaultModelId?.trim() || "ichigo-14",
@@ -29,4 +44,12 @@ export const vtuberConfig = {
   maxContextMessages: boundedInteger(config.maxContextMessages, 16),
   maxStoredSessions: boundedInteger(config.maxStoredSessions, 12),
   systemPrompt: config.systemPrompt?.trim() || DEFAULT_SYSTEM_PROMPT,
+  tts: {
+    enabled: config.tts?.enabled !== false,
+    provider: config.tts?.provider === "browser" || config.tts?.provider === "remote" ? config.tts.provider : "auto",
+    voice: config.tts?.voice?.trim() || "alloy",
+    rate: boundedNumber(config.tts?.rate, 1, 0.5, 2),
+    pitch: boundedNumber(config.tts?.pitch, 1, 0, 2),
+    volume: boundedNumber(config.tts?.volume, 1, 0, 1),
+  },
 } as const;

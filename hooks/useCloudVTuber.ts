@@ -31,6 +31,7 @@ export function useCloudVTuber() {
   const [modelId, setModelId] = useState(vtuberConfig.defaultModelId);
   const [aiModelId, setAIModelId] = useState(vtuberConfig.defaultAIModelId || defaultAIModelId);
   const [expression, setExpression] = useState<Live2DExpression | null>(null);
+  const [triggerText, setTriggerText] = useState("");
   const [mouthOpen, setMouthOpen] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [serviceConfigured, setServiceConfigured] = useState<boolean | null>(null);
@@ -47,7 +48,7 @@ export function useCloudVTuber() {
       const initial = stored.length ? stored : [createVtuberSession()];
       setSessions(initial);
       setActiveSessionId(initial[0].id);
-      setVoiceEnabled(localStorage.getItem(VOICE_KEY) !== "false");
+      setVoiceEnabled(vtuberConfig.tts.enabled && localStorage.getItem(VOICE_KEY) !== "false");
       setModelId(localStorage.getItem(MODEL_KEY) || vtuberConfig.defaultModelId);
       setAIModelId(localStorage.getItem(AI_MODEL_KEY) || vtuberConfig.defaultAIModelId || defaultAIModelId);
       setHydrated(true);
@@ -166,6 +167,7 @@ export function useCloudVTuber() {
         createdAt: Date.now(),
       };
       appendMessage(session.id, assistantMessage);
+      setTriggerText(assistantMessage.text);
 
       void fetch("/api/expression", {
         method: "POST",
@@ -175,9 +177,9 @@ export function useCloudVTuber() {
         if (value) setExpression(value as Live2DExpression);
       }).catch(() => undefined);
 
-      if (voiceEnabled) {
+      if (voiceEnabled && vtuberConfig.tts.enabled) {
         setIsSpeaking(true);
-        await speechRef.current.speak(assistantMessage.text, setMouthOpen);
+        await speechRef.current.speak(assistantMessage.text, setMouthOpen, vtuberConfig.tts);
       }
     } catch (reason) {
       if (!(reason instanceof DOMException && reason.name === "AbortError")) {
@@ -264,6 +266,7 @@ export function useCloudVTuber() {
     aiModelId,
     setAIModelId,
     expression,
+    triggerText,
     mouthOpen,
     error,
     serviceConfigured,
