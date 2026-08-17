@@ -22,9 +22,11 @@ function cleanBaseUrl(value: string | undefined, fallback: string) {
 
 export function getCloudChatStatus(models: AIModel[]) {
   const providers = [...new Set(models.filter((model) => model.enabled !== false).map((model) => model.provider))];
-  const configured = providers.some((provider) => provider === "gemini"
-    ? Boolean(process.env.GEMINI_API_KEY?.trim())
-    : Boolean(process.env.AI_CHAT_API_KEY?.trim()));
+  const configured = providers.some((provider) => {
+    if (provider === "gemini") return Boolean(process.env.GEMINI_API_KEY?.trim());
+    if (provider === "deepseek") return Boolean(process.env.DEEPSEEK_API_KEY?.trim() || process.env.AI_CHAT_API_KEY?.trim());
+    return Boolean(process.env.AI_CHAT_API_KEY?.trim());
+  });
   return { providers, configured };
 }
 
@@ -60,9 +62,12 @@ async function callGemini({ messages, systemPrompt, model, fileBase64, fileMimeT
 }
 
 async function callOpenAICompatible({ messages, systemPrompt, model, fileBase64, fileMimeType }: ChatInput) {
-  const apiKey = process.env.AI_CHAT_API_KEY?.trim();
+  const isDeepSeek = model.provider === "deepseek";
+  const apiKey = (isDeepSeek ? process.env.DEEPSEEK_API_KEY || process.env.AI_CHAT_API_KEY : process.env.AI_CHAT_API_KEY)?.trim();
   const remoteModel = model.remoteModel.trim();
-  if (!apiKey || !remoteModel) throw new Error("未配置 AI_CHAT_API_KEY 或远程模型名");
+  if (!apiKey || !remoteModel) {
+    throw new Error(isDeepSeek ? "未配置 DEEPSEEK_API_KEY 或远程模型名" : "未配置 AI_CHAT_API_KEY 或远程模型名");
+  }
 
   const upstreamMessages = messages.map((message, index) => {
     const isLastUserMessage = message.role === "user" && index === messages.length - 1;
@@ -76,7 +81,10 @@ async function callOpenAICompatible({ messages, systemPrompt, model, fileBase64,
     };
   });
 
-  const response = await fetch(`${cleanBaseUrl(process.env.AI_CHAT_BASE_URL, "https://api.openai.com/v1")}/chat/completions`, {
+  const baseUrl = isDeepSeek
+    ? cleanBaseUrl(process.env.DEEPSEEK_BASE_URL, "https://api.deepseek.com")
+    : cleanBaseUrl(process.env.AI_CHAT_BASE_URL, "https://api.openai.com/v1");
+  const response = await fetch(`${baseUrl}/chat/completions`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
     body: JSON.stringify({
@@ -92,7 +100,7 @@ async function callOpenAICompatible({ messages, systemPrompt, model, fileBase64,
 }
 
 export async function callCloudChat(input: ChatInput) {
-  const reply = input.model.provider === "openai-compatible"
+  const reply = input.model.provider === "openai-compatible" || input.model.provider === "deepseek"
     ? await callOpenAICompatible(input)
     : await callGemini(input);
   if (!reply) throw new Error("云端模型没有返回内容");

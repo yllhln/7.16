@@ -1,6 +1,6 @@
 export type AIModel = {
   id: string;
-  provider: "gemini" | "openai-compatible";
+  provider: "gemini" | "openai-compatible" | "deepseek";
   remoteModel: string;
   name: string;
   description: string;
