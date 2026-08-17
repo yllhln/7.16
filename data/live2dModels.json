@@ -105,9 +105,34 @@
       }
     },
     "triggers": [
-      { "keywords": ["开心", "高兴", "哈哈", "喜欢"], "preset": "happy", "priority": 1 },
-      { "keywords": ["惊讶", "真的吗", "不会吧"], "preset": "surprised", "priority": 1 },
-      { "keywords": ["思考", "为什么", "怎么"], "preset": "thinking", "priority": 1 }
+      {
+        "keywords": [
+          "开心",
+          "高兴",
+          "哈哈",
+          "喜欢"
+        ],
+        "preset": "happy",
+        "priority": 1
+      },
+      {
+        "keywords": [
+          "惊讶",
+          "真的吗",
+          "不会吧"
+        ],
+        "preset": "surprised",
+        "priority": 1
+      },
+      {
+        "keywords": [
+          "思考",
+          "为什么",
+          "怎么"
+        ],
+        "preset": "thinking",
+        "priority": 1
+      }
     ],
     "modelFormat": "model3"
   },
