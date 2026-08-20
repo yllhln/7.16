@@ -23,16 +23,9 @@ import ClientSocials from '../../../components/ClientSocials';
 import BackButton from '../../../components/BackButton';
 import Comments from '../../../components/Comments';
 
-export async function generateStaticParams() {
-  const chattersDirectory = path.join(process.cwd(), 'chatters');
-  if (!fs.existsSync(chattersDirectory)) return [];
-  const filenames = fs.readdirSync(chattersDirectory);
-  return filenames
-    .filter((name) => name.endsWith('.md'))
-    .map((name) => ({
-      slug: name.replace(/\.md$/, ''),
-    }));
-}
+// Keep markdown detail pages request-rendered so Vercel does not need to map
+// every generated slug to a separate static lambda during deployment.
+export const dynamic = 'force-dynamic';
 
 async function getChatterData(slug: string) {
   const fullPath = path.join(process.cwd(), 'chatters', `${slug}.md`);

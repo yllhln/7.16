@@ -53,10 +53,23 @@ export function useCloudVTuber() {
       setAIModelId(localStorage.getItem(AI_MODEL_KEY) || vtuberConfig.defaultAIModelId || defaultAIModelId);
       setHydrated(true);
     });
-    void fetch("/api/vtuber/chat").then((response) => response.json()).then((data) => setServiceConfigured(Boolean(data.configured))).catch(() => setServiceConfigured(false));
     void fetch("/api/vtuber/asr").then((response) => response.json()).then((data) => setAsrConfigured(Boolean(data.configured))).catch(() => setAsrConfigured(false));
     return () => { cancelled = true; };
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const query = aiModelId ? `?modelId=${encodeURIComponent(aiModelId)}` : "";
+    void fetch(`/api/vtuber/chat${query}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (!cancelled) setServiceConfigured(Boolean(data.configured));
+      })
+      .catch(() => {
+        if (!cancelled) setServiceConfigured(false);
+      });
+    return () => { cancelled = true; };
+  }, [aiModelId]);
 
   useEffect(() => {
     if (hydrated) saveVtuberSessions(sessions);

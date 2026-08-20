@@ -23,18 +23,9 @@ import ClientTOC from '../../../components/ClientTOC';
 import BackButton from '../../../components/BackButton';
 import Comments from '../../../components/Comments';
 
-export async function generateStaticParams() {
-  const postsDirectory = path.join(process.cwd(), 'posts');
-  if (!fs.existsSync(postsDirectory)) return [];
-
-  const filenames = fs.readdirSync(postsDirectory);
-
-  return filenames
-    .filter((name) => name.endsWith('.md'))
-    .map((name) => ({
-      slug: name.replace(/\.md$/, ''),
-    }));
-}
+// Keep markdown detail pages request-rendered so Vercel does not need to map
+// every generated slug to a separate static lambda during deployment.
+export const dynamic = 'force-dynamic';
 
 function extractToc(content: string) {
   const headingRegex = /^(#{1,3})\s+(.+)$/gm;

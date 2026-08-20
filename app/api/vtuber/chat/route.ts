@@ -7,8 +7,9 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
 
-export async function GET() {
-  return Response.json(getCloudChatStatus(aiModels));
+export async function GET(request: Request) {
+  const modelId = new URL(request.url).searchParams.get("modelId") || undefined;
+  return Response.json(getCloudChatStatus(aiModels, modelId));
 }
 
 export async function POST(request: Request) {

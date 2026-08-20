@@ -22,14 +22,22 @@ function cleanBaseUrl(value: string | undefined, fallback: string) {
 
 function getModelAuth(model: AIModel) {
   const environmentName = model.apiKeyEnv?.trim() || (model.provider === "gemini" ? "GEMINI_API_KEY" : "AI_CHAT_API_KEY");
-  return { apiKey: process.env[environmentName]?.trim(), environmentName };
+  const apiKey = process.env[environmentName]?.trim() || process.env.AI_CHAT_API_KEY?.trim();
+  return { apiKey, environmentName };
 }
 
-export function getCloudChatStatus(models: AIModel[]) {
+export function getCloudChatStatus(models: AIModel[], requestedModelId?: string) {
   const enabledModels = models.filter((model) => model.enabled !== false);
   const providers = [...new Set(enabledModels.map((model) => model.provider))];
-  const configured = enabledModels.some((model) => Boolean(getModelAuth(model).apiKey));
-  return { providers, configured };
+  const modelStatuses = Object.fromEntries(enabledModels.map((model) => [
+    model.id,
+    { configured: Boolean(getModelAuth(model).apiKey), environmentName: getModelAuth(model).environmentName },
+  ]));
+  const selectedModel = requestedModelId ? enabledModels.find((model) => model.id === requestedModelId) : undefined;
+  const configured = selectedModel
+    ? Boolean(getModelAuth(selectedModel).apiKey)
+    : enabledModels.some((model) => Boolean(getModelAuth(model).apiKey));
+  return { providers, configured, modelId: selectedModel?.id || null, modelStatuses };
 }
 
 async function callGemini({ messages, systemPrompt, model, fileBase64, fileMimeType }: ChatInput) {

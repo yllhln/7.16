@@ -1,0 +1,269 @@
+Vercel CLI 59.1.4 (Node.js 24.18.0)
+First deployment: evaluating framework detection (workPath="D:\7.16\XinghuisamaBlogs-main\XHBlogs", configuredFramework="nextjs")
+isFirstDeployment: VERCEL_FIRST_DEPLOYMENT=<unset> -> false
+First deployment: skipping framework detection because this is not a first deployment
+Could not resolve package "@flags-sdk/vercel". Package is not installed. Error: Cannot find module '@flags-sdk/vercel'
+Require stack:
+- C:\Users\32955\AppData\Local\npm-cache\_npx\67eb4586ca667318\node_modules\@vercel\build-utils\dist\index.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    at require.resolve (node:internal/modules/helpers:171:31)
+    at isPackageInstalled (C:\Users\32955\AppData\Local\npm-cache\_npx\67eb4586ca667318\node_modules\@vercel\build-utils\dist\index.js:39203:30)
+    at shouldEmbedFlagsDefinitions (file:///C:/Users/32955/AppData/Local/npm-cache/_npx/67eb4586ca667318/node_modules/vercel/dist/commands/build/index.js:716:32)
+    at file:///C:/Users/32955/AppData/Local/npm-cache/_npx/67eb4586ca667318/node_modules/vercel/dist/commands/build/index.js:1412:31
+    at _Span.trace (C:\Users\32955\AppData\Local\npm-cache\_npx\67eb4586ca667318\node_modules\@vercel\build-utils\dist\index.js:39171:20)
+    at doBuild (file:///C:/Users/32955/AppData/Local/npm-cache/_npx/67eb4586ca667318/node_modules/vercel/dist/commands/build/index.js:1411:50)
+    at async _Span.trace (C:\Users\32955\AppData\Local\npm-cache\_npx\67eb4586ca667318\node_modules\@vercel\build-utils\dist\index.js:39171:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\32955\\AppData\\Local\\npm-cache\\_npx\\67eb4586ca667318\\node_modules\\@vercel\\build-utils\\dist\\index.js'
+  ]
+}
+Could not resolve package "@vercel/flags-core". Package is not installed. Error: Cannot find module '@vercel/flags-core'
+Require stack:
+- C:\Users\32955\AppData\Local\npm-cache\_npx\67eb4586ca667318\node_modules\@vercel\build-utils\dist\index.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    at require.resolve (node:internal/modules/helpers:171:31)
+    at isPackageInstalled (C:\Users\32955\AppData\Local\npm-cache\_npx\67eb4586ca667318\node_modules\@vercel\build-utils\dist\index.js:39203:30)
+    at shouldEmbedFlagsDefinitions (file:///C:/Users/32955/AppData/Local/npm-cache/_npx/67eb4586ca667318/node_modules/vercel/dist/commands/build/index.js:717:30)
+    at async file:///C:/Users/32955/AppData/Local/npm-cache/_npx/67eb4586ca667318/node_modules/vercel/dist/commands/build/index.js:1412:25
+    at async _Span.trace (C:\Users\32955\AppData\Local\npm-cache\_npx\67eb4586ca667318\node_modules\@vercel\build-utils\dist\index.js:39171:14)
+    at async doBuild (file:///C:/Users/32955/AppData/Local/npm-cache/_npx/67eb4586ca667318/node_modules/vercel/dist/commands/build/index.js:1411:3)
+    at async _Span.trace (C:\Users\32955\AppData\Local\npm-cache\_npx\67eb4586ca667318\node_modules\@vercel\build-utils\dist\index.js:39171:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\32955\\AppData\\Local\\npm-cache\\_npx\\67eb4586ca667318\\node_modules\\@vercel\\build-utils\\dist\\index.js'
+  ]
+}
+Framework detection: VERCEL_FRAMEWORK_DETECTION=<unset> -> disabled
+Framework detection: VERCEL_FRAMEWORK_DETECTION=<unset> -> disabled
+{
+  "repoRootPath": "D:\\7.16\\XinghuisamaBlogs-main\\XHBlogs",
+  "baseDir": "D:\\7.16\\XinghuisamaBlogs-main\\XHBlogs",
+  "workPath": "D:\\7.16\\XinghuisamaBlogs-main\\XHBlogs",
+  "entryPath": "D:\\7.16\\XinghuisamaBlogs-main\\XHBlogs",
+  "entryDirectory": ".",
+  "outputDirectory": ".next"
+}
+Selected Node.js 24.x
+Detected undefined. Added "undefined" to path. Based on assumed package manager "npm", lockfile "undefined", and lockfileVersion "3"
+WARNING: You should not upload the `.next` directory.
+MODE: server(less)
+Installing dependencies...
+Installing to D:\7.16\XinghuisamaBlogs-main\XHBlogs
+Detected undefined. Added "undefined" to path. Based on assumed package manager "npm", lockfile "undefined", and lockfileVersion "3"
+
+up to date in 1s
+
+254 packages are looking for funding
+  run `npm fund` for details
+npm warn allow-scripts 2 packages have install scripts not yet covered by allowScripts:
+npm warn allow-scripts   sharp@0.34.5 (install: (install scripts present))
+npm warn allow-scripts   unrs-resolver@1.11.1 (install: (install scripts present))
+npm warn allow-scripts
+npm warn allow-scripts Run `npm approve-scripts --allow-scripts-pending` to review, or `npm approve-scripts <pkg>` to allow.
+Install complete [1666ms]
+Detected Next.js version: 16.2.1
+Application is being built in server mode since 16.2.1 meets minimum version of v10.0.9-canary.4
+Running user script...
+Detected undefined. Added "undefined" to path. Based on assumed package manager "npm", lockfile "undefined", and lockfileVersion "3"
+Running "npm run build"
+
+> my-blog@0.1.0 build
+> next build
+
+▲ Next.js 16.2.1 (Turbopack)
+
+  Creating an optimized production build ...
+Turbopack build encountered 1 warnings:
+./next.config.ts
+Encountered unexpected file in NFT list
+A file was traced that indicates that the whole project was traced unintentionally. Somewhere in the import trace below, there are:
+- filesystem operations (like path.join, path.resolve or fs.readFile), or
+- very dynamic requires (like require('./' + foo)).
+To resolve this, you can
+- remove them if possible, or
+- only use them in development, or
+- make sure they are statically scoped to some subfolder: path.join(process.cwd(), 'data', bar), or
+- add ignore comments: path.join(/*turbopackIgnore: true*/ process.cwd(), bar)
+
+Import trace:
+  Server Component:
+    ./next.config.ts
+    ./app/tree/page.tsx
+
+
+✓ Compiled successfully in 12.0s
+  Skipping validation of types
+  Finished TypeScript config validation in 14ms ...
+  Collecting page data using 7 workers ...
+⚠ Using edge runtime on a page currently disables static generation for that page
+  Generating static pages using 7 workers (0/21) ...
+  Generating static pages using 7 workers (5/21) 
+  Generating static pages using 7 workers (10/21) 
+  Generating static pages using 7 workers (15/21) 
+✓ Generating static pages using 7 workers (21/21) in 705ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /about
+├ ○ /ai
+├ ƒ /api/expression
+├ ƒ /api/github
+├ ƒ /api/test
+├ ƒ /api/tts
+├ ƒ /api/vtuber/asr
+├ ƒ /api/vtuber/chat
+├ ƒ /api/weather
+├ ○ /chatter
+├ ● /chatter/[slug]
+│ └ /chatter/2026-03-25-originium-research
+├ ○ /friends
+├ ○ /moments
+├ ○ /photowall
+├ ● /posts/[slug]
+│ ├ /posts/2222
+│ ├ /posts/first
+│ └ /posts/long-test-article
+├ ○ /projects
+├ ○ /timeline
+└ ○ /tree
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
+Script complete [16537ms]
+build command exited
+Private file next-stats.json had an error and will not be uploaded: Error: ENOENT: no such file or directory, stat 'D:\7.16\XinghuisamaBlogs-main\XHBlogs\.next\next-stats.json'
+Preparing serverless function files...
+Using bundled Next.js server
+Using next-server.js.nft.json trace from build
+collecting initial Next.js server files
+creating initial pseudo layer
+Traced Next.js server files in: 65.046ms
+{
+  "uncompressedInitialSize": 604400,
+  "compressedInitialSize": 809433
+}
+Tracing entries due to missing build traces:
+[
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/_global-error/page.js",
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/_not-found/page.js",
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/about/page.js",
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/ai/page.js",
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/chatter/[slug]/page.js",
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/chatter/page.js",
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/friends/page.js",
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/moments/page.js",
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/photowall/page.js",
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/posts/[slug]/page.js",
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/projects/page.js",
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/timeline/page.js",
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/tree/page.js",
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/api/expression/route.js",
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/api/github/route.js",
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/api/tts/route.js",
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/api/vtuber/asr/route.js",
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/api/vtuber/chat/route.js",
+  "D:/7.16/XinghuisamaBlogs-main/XHBlogs/.next/server/app/api/weather/route.js"
+]: 99.642ms
+{
+  "apiLambdaGroups": [],
+  "pageLambdaGroups": [],
+  "appRouterLambdaGroups": [
+    {
+      "pages": [
+        "_global-error.js",
+        "_not-found.js",
+        "about.js",
+        "ai.js",
+        "chatter.js",
+        "friends.js",
+        "moments.js",
+        "index.js",
+        "photowall.js",
+        "projects.js",
+        "timeline.js",
+        "tree.js"
+      ],
+      "isPrerender": true,
+      "isStreaming": true,
+      "isExperimentalPPR": false,
+      "pseudoLayerBytes": 809433,
+      "uncompressedLayerBytes": 2500245
+    },
+    {
+      "pages": [
+        "chatter\\[slug].js",
+        "posts\\[slug].js"
+      ],
+      "isPrerender": false,
+      "isStreaming": true,
+      "isExperimentalPPR": false,
+      "pseudoLayerBytes": 809433,
+      "uncompressedLayerBytes": 640729
+    }
+  ],
+  "appRouterStreamingPrerenderLambdaGroups": [],
+  "appRouteHandlersLambdaGroups": [
+    {
+      "pages": [
+        "api\\expression.js",
+        "api\\github.js",
+        "api\\tts.js",
+        "api\\vtuber\\asr.js",
+        "api\\vtuber\\chat.js",
+        "api\\weather.js"
+      ],
+      "isPrerender": false,
+      "isStreaming": true,
+      "isExperimentalPPR": false,
+      "pseudoLayerBytes": 809433,
+      "uncompressedLayerBytes": 640874
+    }
+  ],
+  "nextServerLayerSize": 809433
+}
+Serverless function size info
+Serverless Function's pages: _global-error.js, _not-found.js, about.js, ai.js, chatter.js, friends.js, moments.js, index.js, photowall.js, projects.js, timeline.js, tree.js
+Large Dependencies                                                          Uncompressed size
+node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.prod.js          589.98 KB
+
+All dependencies                                                                      2.38 MB
+Serverless Function's pages: chatter\[slug].js, posts\[slug].js
+Large Dependencies                                Uncompressed size
+No large dependencies found (> 500KB compressed)
+
+All dependencies                                          625.71 KB
+Serverless Function's pages: api\expression.js, api\github.js, api\tts.js, api\vtuber\asr.js, api\vtuber\chat.js, api\weather.js
+Large Dependencies                                Uncompressed size
+No large dependencies found (> 500KB compressed)
+
+All dependencies                                          625.85 KB
+Created all serverless functions in: 233.579ms
+Reading diagnostics file in diagnosticsEntrypoint=
+Downloading deployment source files...
+{
+  "status": "error",
+  "reason": "build_failed",
+  "message": "Unable to find lambda for route: /chatter/2026-03-25-originium-research",
+  "next": [
+    {
+      "command": "vercel pull --yes",
+      "when": "Ensure project settings are present"
+    },
+    {
+      "command": "vercel build --yes",
+      "when": "re-run build"
+    }
+  ]
+}
+Error: Unable to find lambda for route: /chatter/2026-03-25-originium-research
+Downloaded 6 source files: 16ms
