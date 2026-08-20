@@ -116,11 +116,11 @@ export class Live2DController {
   private layout() {
     if (!this.model || !this.canvas.parentElement) return;
     const host = this.canvas.parentElement;
-    const scale = Math.min(host.clientWidth / this.model.width, host.clientHeight / this.model.height) * (this.definition.layout?.scale || 0.86);
+    const scale = Math.min(host.clientWidth / this.model.width, host.clientHeight / this.model.height) * (this.definition.layout?.scale ?? 0.86);
     this.model.scale.set(scale);
     this.model.anchor.set(0.5, 1);
-    this.model.x = host.clientWidth * (0.5 + (this.definition.layout?.offsetX || 0));
-    this.model.y = host.clientHeight * (1 + (this.definition.layout?.offsetY || 0));
+    this.model.x = host.clientWidth * (0.5 + (this.definition.layout?.offsetX ?? 0));
+    this.model.y = host.clientHeight * (1 + (this.definition.layout?.offsetY ?? 0));
   }
 
   playMotion(group?: string, index?: number, priority?: number) {

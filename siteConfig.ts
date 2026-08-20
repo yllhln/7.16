@@ -11,6 +11,7 @@ export const siteConfig = {
   themeColors: ["#0f766e", "#0f172a", "#c2410c", "#e2e8f0"],
   bgImages: ["/assets/site/background.png", "/assets/site/cover.png"],
   aiPageBackground: "/assets/site/cover.png",
+  aiChatBackground: "/assets/site/background.png",
   defaultPostCover: "/assets/site/cover.png",
   photoWallImage: "/assets/site/background.png",
   social: { github: "https://github.com/heiehiehi", gitee: "https://github.com/heiehiehi", google: "mailto:bilibiliwuwuwu@gmail.com", email: "3295587260@qq.com", qq: "3295587260", wechat: "XingHuisama" },

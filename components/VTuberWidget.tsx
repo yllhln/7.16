@@ -18,6 +18,7 @@ import Live2DCanvas from "@/components/Live2DCanvas";
 import { live2dModels } from "@/data/live2dModels";
 import { enabledAIModels } from "@/data/aiModels";
 import { vtuberConfig } from "@/data/vtuberConfig";
+import { siteConfig } from "@/siteConfig";
 import { useCloudVTuber } from "@/hooks/useCloudVTuber";
 import type { ImageAttachment } from "@/lib/vtuber/types";
 
@@ -122,7 +123,7 @@ export default function VTuberWidget() {
       <section className="mx-auto flex min-h-[100dvh] max-w-[1500px] flex-col px-0 pb-0 pt-16 md:px-5 md:pb-5 md:pt-20">
         <div className="grid min-h-0 flex-1 overflow-hidden border-y border-white/10 bg-slate-950 shadow-2xl md:border lg:grid-cols-[minmax(320px,0.86fr)_minmax(460px,1.24fr)]">
           <section className="relative min-h-[36dvh] overflow-hidden border-b border-white/10 bg-slate-900 lg:min-h-0 lg:border-b-0 lg:border-r">
-            <div className="absolute inset-0 bg-[url('/assets/site/cover.png')] bg-cover bg-center opacity-35" />
+            <div className="absolute inset-0 bg-cover bg-center opacity-35" style={{ backgroundImage: `url(${siteConfig.aiPageBackground || siteConfig.bgImages?.[0] || "/assets/site/cover.png"})` }} />
             <div className="absolute inset-0 bg-slate-950/60" />
             <div className="absolute left-3 right-3 top-3 z-10 flex items-center justify-between gap-3">
               <select
@@ -143,7 +144,7 @@ export default function VTuberWidget() {
             </div>
           </section>
 
-          <section className="relative flex min-h-[58dvh] min-w-0 flex-col bg-slate-950/95 lg:min-h-0">
+          <section className="relative flex min-h-[58dvh] min-w-0 flex-col bg-slate-950/95 lg:min-h-0" style={{ backgroundImage: `linear-gradient(rgba(2, 6, 23, 0.92), rgba(2, 6, 23, 0.92)), url(${siteConfig.aiChatBackground || siteConfig.bgImages?.[1] || "/assets/site/background.png"})`, backgroundSize: "cover", backgroundPosition: "center" }}>
             <header className="flex h-14 shrink-0 items-center justify-between border-b border-white/10 px-3 sm:px-4">
               <div className="flex items-center gap-1">
                 <button type="button" onClick={() => setHistoryOpen((value) => !value)} className="grid h-9 w-9 place-items-center text-slate-300 hover:bg-white/10 hover:text-white" title="对话历史"><History size={18} /></button>
@@ -166,7 +167,7 @@ export default function VTuberWidget() {
               </div>
             </header>
 
-            <aside className={`absolute bottom-0 left-0 top-14 z-30 flex w-[min(82vw,290px)] flex-col border-r border-white/10 bg-slate-950 shadow-2xl transition-transform duration-200 ${historyOpen ? "translate-x-0" : "-translate-x-full"}`}>
+            <aside aria-hidden={!historyOpen} style={{ transform: historyOpen ? "translateX(0)" : "translateX(-100%)", visibility: historyOpen ? "visible" : "hidden" }} className={`absolute bottom-0 left-0 top-14 z-30 flex w-[min(82vw,290px)] flex-col border-r border-white/10 bg-slate-950 shadow-2xl transition-transform duration-200 ${historyOpen ? "pointer-events-auto" : "pointer-events-none"}`}>
               <div className="flex h-12 items-center justify-between border-b border-white/10 px-4">
                 <span className="text-sm font-semibold">对话</span>
                 <button type="button" onClick={() => setHistoryOpen(false)} className="grid h-8 w-8 place-items-center text-slate-400 hover:bg-white/10 hover:text-white" title="关闭"><X size={17} /></button>

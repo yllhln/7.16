@@ -7,7 +7,17 @@ type VTuberConfig = {
   maxContextMessages?: number;
   maxStoredSessions?: number;
   systemPrompt?: string;
+  live2dDefaults?: Live2DDefaults;
   tts?: Partial<TTSConfig>;
+};
+
+export type Live2DMask = { type?: "none" | "upper-body" | "left-half" | "right-half" | "custom"; clipPath?: string };
+export type Live2DDefaults = {
+  layout?: { scale?: number; offsetX?: number; offsetY?: number };
+  mask?: Live2DMask;
+  parameterRanges?: Record<string, [number, number]>;
+  presets?: Record<string, { parameters: Record<string, number>; durationMs: number; holdMs: number }>;
+  triggers?: Array<{ keywords?: string[]; pattern?: string; preset?: string; motionGroup?: string; motionIndex?: number; priority?: number }>;
 };
 
 export type TTSConfig = {
@@ -44,6 +54,13 @@ export const vtuberConfig = {
   maxContextMessages: boundedInteger(config.maxContextMessages, 16),
   maxStoredSessions: boundedInteger(config.maxStoredSessions, 12),
   systemPrompt: config.systemPrompt?.trim() || DEFAULT_SYSTEM_PROMPT,
+  live2dDefaults: {
+    layout: { scale: config.live2dDefaults?.layout?.scale ?? 0.86, offsetX: config.live2dDefaults?.layout?.offsetX ?? 0, offsetY: config.live2dDefaults?.layout?.offsetY ?? 0 },
+    mask: { type: config.live2dDefaults?.mask?.type || "none", clipPath: config.live2dDefaults?.mask?.clipPath || "" },
+    parameterRanges: config.live2dDefaults?.parameterRanges || {},
+    presets: config.live2dDefaults?.presets || {},
+    triggers: config.live2dDefaults?.triggers || [],
+  },
   tts: {
     enabled: config.tts?.enabled !== false,
     provider: config.tts?.provider === "browser" || config.tts?.provider === "remote" ? config.tts.provider : "auto",

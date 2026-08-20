@@ -19,6 +19,16 @@ export default function Live2DCanvas({ modelId, expression, mouthOpen = 0, trigg
   const definition = getLive2DModel(modelId);
   const ready = loadedModelId === modelId;
   const error = !definition || failedModelId === modelId;
+  const maskType = definition?.mask?.type || "none";
+  const clipPath = maskType === "upper-body"
+    ? "inset(0 0 42% 0)"
+    : maskType === "left-half"
+      ? "inset(0 50% 0 0)"
+      : maskType === "right-half"
+        ? "inset(0 0 0 50%)"
+        : maskType === "custom"
+          ? definition?.mask?.clipPath || undefined
+          : undefined;
 
   useEffect(() => {
     if (!canvasRef.current || !definition) return;
@@ -50,10 +60,12 @@ export default function Live2DCanvas({ modelId, expression, mouthOpen = 0, trigg
   }, [triggerText]);
 
   return (
-    <div className="absolute inset-0" aria-label="Live2D assistant">
+    <div className="absolute inset-0 overflow-hidden" aria-label="Live2D assistant">
+      <div className="absolute inset-0" style={{ clipPath }}>
       <canvas ref={canvasRef} className={`h-full w-full transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`} />
       {!ready && !error ? <div className="absolute inset-0 grid place-items-center text-sm text-white/60">Live2D loading...</div> : null}
       {error ? <div className="absolute inset-0 grid place-items-center px-8 text-center text-sm text-amber-100/80">Live2D unavailable</div> : null}
+      </div>
     </div>
   );
 }
