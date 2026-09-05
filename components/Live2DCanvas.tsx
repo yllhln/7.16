@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { Live2DRuntimeHandle, type Live2DMapping } from "@/lib/live2dRuntime";
 
 export interface Live2DCanvasProps {
@@ -8,21 +8,29 @@ export interface Live2DCanvasProps {
   backgroundUrl?: string;
   foregroundUrl?: string;
   behaviorProfile?: Live2DMapping["behaviorProfile"];
-  emotion?: string;
   className?: string;
 }
 
-export default function Live2DCanvas({
+export interface Live2DCanvasHandle {
+  playEmotion: (emotion: string) => Promise<void>;
+}
+
+const Live2DCanvas = forwardRef<Live2DCanvasHandle, Live2DCanvasProps>(function Live2DCanvas({
   modelUrl,
   backgroundUrl,
   foregroundUrl,
   behaviorProfile,
-  emotion,
   className,
-}: Live2DCanvasProps) {
+}: Live2DCanvasProps, ref) {
   const containerRef = useRef<HTMLDivElement>(null);
   const runtimeRef = useRef<Live2DRuntimeHandle | undefined>(undefined);
   const [error, setError] = useState<string>();
+
+  useImperativeHandle(ref, () => ({
+    async playEmotion(nextEmotion: string) {
+      await runtimeRef.current?.playEmotion(nextEmotion);
+    },
+  }), []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -50,10 +58,6 @@ export default function Live2DCanvas({
     };
   }, [modelUrl, backgroundUrl, foregroundUrl, behaviorProfile]);
 
-  useEffect(() => {
-    if (emotion) void runtimeRef.current?.playEmotion(emotion);
-  }, [emotion]);
-
   return (
     <div
       ref={containerRef}
@@ -74,4 +78,6 @@ export default function Live2DCanvas({
       ) : null}
     </div>
   );
-}
+});
+
+export default Live2DCanvas;

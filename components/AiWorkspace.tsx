@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import type { CharacterRuntimeProfile } from "@/lib/characterProfiles";
 import { ConversationStore, type Conversation } from "@/lib/session";
 import { placeholderForEmotion } from "@/lib/emotionPlaceholder";
-import Live2DCanvas from "@/components/Live2DCanvas";
+import Live2DCanvas, { type Live2DCanvasHandle } from "@/components/Live2DCanvas";
 import CharacterSelector from "@/components/CharacterSelector";
 import ConversationContext from "@/components/ConversationContext";
 import ChatInput, { type ChatAttachment } from "@/components/ChatInput";
@@ -35,6 +35,7 @@ export default function AiWorkspace({ profile, characterProfiles }: AiWorkspaceP
   const router = useRouter();
   const storeRef = useRef<ConversationStore | undefined>(undefined);
   const fileRef = useRef<HTMLInputElement>(null);
+  const live2dRef = useRef<Live2DCanvasHandle>(null);
   const [conversation, setConversation] = useState<Conversation>();
   const [history, setHistory] = useState<Conversation[]>([]);
   const [draft, setDraft] = useState("");
@@ -126,6 +127,7 @@ export default function AiWorkspace({ profile, characterProfiles }: AiWorkspaceP
     setHistory(store.list(profile.character.id));
     setDraft("");
     setEmotion(reply.emotion);
+    void live2dRef.current?.playEmotion(reply.emotion);
     setAttachment((previous) => {
       if (previous?.previewUrl) URL.revokeObjectURL(previous.previewUrl);
       return undefined;
@@ -152,7 +154,7 @@ export default function AiWorkspace({ profile, characterProfiles }: AiWorkspaceP
         <div className="grid min-h-0 flex-1 gap-4 md:grid-cols-[minmax(0,4fr)_minmax(280px,1fr)]">
           <section className="relative flex min-h-[min(66svh,720px)] min-w-0 flex-col overflow-hidden rounded-[30px] border border-white/60 bg-white/30 shadow-2xl backdrop-blur-md dark:border-white/10 dark:bg-slate-900/35 md:min-h-0">
             <div className="absolute left-5 top-5 z-10 hidden items-center gap-2 rounded-2xl border border-white/60 bg-white/60 px-3 py-2 backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/60 md:flex"><span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" /><span className="text-xs font-black text-slate-700 dark:text-slate-200">{profile.character.name}</span></div>
-            <div className="min-h-0 flex-1"><Live2DCanvas modelUrl={profile.live2dModel.publicModelPath} backgroundUrl={profile.background.publicPath} behaviorProfile={profile.behaviorProfile.emotions} emotion={emotion} className="h-full min-h-[min(66svh,720px)] md:min-h-full" /></div>
+            <div className="min-h-0 flex-1"><Live2DCanvas ref={live2dRef} modelUrl={profile.live2dModel.publicModelPath} backgroundUrl={profile.background.publicPath} behaviorProfile={profile.behaviorProfile.emotions} className="h-full min-h-[min(66svh,720px)] md:min-h-full" /></div>
           </section>
           <div className="hidden min-h-0 md:flex"><ConversationContext conversation={conversation} history={history} onSelect={(id) => { const next = storeRef.current?.get(id, profile.character.id); if (next) setConversation(next); }} onDelete={handleDeleteConversation} /></div>
         </div>
