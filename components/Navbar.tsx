@@ -70,6 +70,7 @@ export default function Navbar() {
 
   const navLinks = [
     { name: '首页', href: '/' },
+    { name: 'AI陪伴', href: '/ai' },
     { name: '项目', href: '/projects' },
     { name: '归档', href: '/timeline' },
     { name: '照片墙', href: '/photowall' },
