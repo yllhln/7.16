@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "modelId": "mo",
+  "displayName": "MO",
+  "lookAt": {
+    "eyeX": { "parameterId": "ParamEyeBallX", "input": "pointer.x", "inputRange": [-1, 1], "outputRange": [-1, 1] },
+    "eyeY": { "parameterId": "ParamEyeBallY", "input": "pointer.y", "inputRange": [-1, 1], "outputRange": [-1, 1] },
+    "headX": { "parameterId": "ParamAngleX", "input": "pointer.x", "inputRange": [-1, 1], "outputRange": [-30, 30] },
+    "headY": { "parameterId": "ParamAngleY", "input": "pointer.y", "inputRange": [-1, 1], "outputRange": [-30, 30] }
+  },
+  "lipSync": { "mouthOpen": { "parameterId": "ParamMouthOpenY", "inputRange": [0, 1], "outputRange": [0, 2.1] } },
+  "expressions": [],
+  "motions": [
+    { "id": "1.motion3.json", "name": "1", "group": "Idle", "index": 0, "file": "motion/1.motion3.json" },
+    { "id": "2.motion3.json", "name": "2", "group": "Idle", "index": 1, "file": "motion/2.motion3.json" },
+    { "id": "3.motion3.json", "name": "3", "group": "Idle", "index": 2, "file": "motion/3.motion3.json" }
+  ],
+  "behaviorProfile": {
+    "neutral": { "expression": null, "motion": null },
+    "happy": { "expression": null, "motion": "1.motion3.json" },
+    "sad": { "expression": null, "motion": "2.motion3.json" },
+    "surprised": { "expression": null, "motion": "3.motion3.json" }
+  }
+}

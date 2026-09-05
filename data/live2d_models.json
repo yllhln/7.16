@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Stage B compatibility inventory; runtime mappings require later validation",
+  "resourceRoot": "assets/live2d",
+  "models": [
+    {
+      "id": "strawberry-rabbit-trial",
+      "displayName": "草莓兔兔 试用",
+      "format": "cubism3",
+      "sourceModelPath": "草莓兔兔/草莓兔兔 试用/草莓兔兔  试用.model3.json",
+      "publicModelPath": "/live2d/草莓兔兔/草莓兔兔 试用/草莓兔兔  试用.model3.json",
+      "manifestVersion": 3,
+      "status": "discovered-needs-runtime-validation",
+      "resources": {
+        "moc": "草莓兔兔/草莓兔兔 试用/草莓兔兔  试用.moc3",
+        "physics": "草莓兔兔/草莓兔兔 试用/草莓兔兔  试用.physics3.json",
+        "displayInfo": "草莓兔兔/草莓兔兔 试用/草莓兔兔  试用.cdi3.json",
+        "textureCount": 5,
+        "expressionFiles": [
+          "爱心.exp3.json",
+          "黑脸.exp3.json",
+          "红脸.exp3.json",
+          "水印.exp3.json",
+          "星星眼.exp3.json"
+        ],
+        "motionFiles": ["Scene1.motion3.json"]
+      },
+      "declaredParameterGroups": {
+        "eyeBlink": ["ParamEyeLOpen", "ParamEyeROpen"],
+        "lipSync": []
+      },
+      "mappingPath": "草莓兔兔/草莓兔兔 试用/mapping.json",
+      "mappingStatus": "generated-lookat-expression-motion",
+      "notes": [
+        "The model manifest declares a LipSync group with no parameter IDs; do not fabricate a mouth parameter.",
+        "LookAt parameter IDs are not declared by the manifest and must be inspected during mapping generation.",
+        "The resource currently lives in the frontend public directory; workbench asset ownership and sync must be resolved before production use."
+      ]
+    },
+    {
+      "id": "mo",
+      "displayName": "MO",
+      "format": "cubism3",
+      "sourceModelPath": "mo/MO.model3.json",
+      "publicModelPath": "/live2d/mo/MO.model3.json",
+      "manifestVersion": 3,
+      "status": "discovered-needs-runtime-validation",
+      "resources": {
+        "moc": "mo/MO.moc3",
+        "physics": "mo/MO.physics3.json",
+        "displayInfo": "mo/MO.cdi3.json",
+        "textureCount": 10,
+        "expressionFiles": [],
+        "motionFiles": ["1.motion3.json", "2.motion3.json", "3.motion3.json"]
+      },
+      "declaredParameterGroups": {
+        "eyeBlink": [],
+        "lipSync": []
+      },
+      "mappingPath": "mo/mapping.json",
+      "mappingStatus": "generated-lookat-expression-motion",
+      "notes": [
+        "The model manifest declares empty EyeBlink and LipSync groups; do not fabricate parameter IDs.",
+        "LookAt parameter IDs are not declared by the manifest and must be inspected during mapping generation."
+      ]
+    },
+    {
+      "id": "sea-angel",
+      "displayName": "海天使",
+      "format": "cubism3",
+      "sourceModelPath": "海天使/海天使.model3.json",
+      "publicModelPath": "/live2d/海天使/海天使.model3.json",
+      "manifestVersion": 3,
+      "status": "discovered-needs-runtime-validation",
+      "resources": {
+        "moc": "海天使/海天使.moc3",
+        "physics": "海天使/海天使.physics3.json",
+        "displayInfo": "海天使/海天使.cdi3.json",
+        "textureCount": 2,
+        "expressionFiles": [
+          "哭.exp3.json",
+          "脸红.exp3.json",
+          "眯眯眼.exp3.json",
+          "生气.exp3.json",
+          "问号.exp3.json",
+          "星星.exp3.json"
+        ],
+        "motionFiles": []
+      },
+      "declaredParameterGroups": {
+        "eyeBlink": ["ParamEyeLOpen", "ParamEyeROpen"],
+        "lipSync": []
+      },
+      "mappingPath": "海天使/mapping.json",
+      "mappingStatus": "generated-lookat-expression-motion",
+      "notes": [
+        "The model manifest declares a LipSync group with no parameter IDs; do not fabricate a mouth parameter.",
+        "LookAt parameter IDs are not declared by the manifest and must be inspected during mapping generation."
+      ]
+    }
+  ]
+}

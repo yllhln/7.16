@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "backgrounds": [
+    {
+      "id": "site-background",
+      "displayName": "站点背景",
+      "publicPath": "/assets/site/background.png",
+      "enabled": true
+    },
+    {
+      "id": "site-cover",
+      "displayName": "站点封面",
+      "publicPath": "/assets/site/cover.png",
+      "enabled": true
+    },
+    {
+      "id": "background-1",
+      "displayName": "背景 1",
+      "publicPath": "/assets/backgrounds/1.png",
+      "enabled": true
+    },
+    {
+      "id": "background-2205",
+      "displayName": "背景 22.05",
+      "publicPath": "/assets/backgrounds/22.05.png",
+      "enabled": true
+    },
+    {
+      "id": "background-7221",
+      "displayName": "背景 7.22.1",
+      "publicPath": "/assets/backgrounds/7.22.1.png",
+      "enabled": true
+    }
+  ]
+}

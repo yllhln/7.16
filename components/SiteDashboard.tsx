@@ -7,6 +7,7 @@ import { siteConfig } from '../siteConfig';
 export default function SiteDashboard() {
   const [timeStr, setTimeStr] = useState('');
   const [uptimeStr, setUptimeStr] = useState('');
+  const footerBadges = siteConfig.footerBadges as Array<{ color: string; svg: string; name: string }>;
 
   // 🌟 从配置中读取建站时间
   const START_DATE = new Date(siteConfig.buildDate || '2026-03-23T00:00:00').getTime();
@@ -52,7 +53,7 @@ export default function SiteDashboard() {
 
         {/* 技术栈徽章 (🌟 动态映射 siteConfig 里的数组) */}
         <div className="flex gap-2">
-          {siteConfig.footerBadges?.map((badge, index) => (
+          {footerBadges.map((badge, index) => (
             <span
               key={index}
               className="px-2 py-1 bg-white/50 dark:bg-slate-700/50 rounded-md shadow-sm flex items-center gap-1 border border-white/40 dark:border-slate-600"

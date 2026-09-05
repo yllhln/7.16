@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {
+      "id": "mo-standard",
+      "displayName": "MO 标准行为",
+      "emotions": {
+        "neutral": { "expression": null, "motion": null },
+        "happy": { "expression": null, "motion": "1.motion3.json" },
+        "sad": { "expression": null, "motion": "2.motion3.json" },
+        "surprised": { "expression": null, "motion": "3.motion3.json" }
+      }
+    },
+    {
+      "id": "sea-angel-standard",
+      "displayName": "海天使标准行为",
+      "emotions": {
+        "neutral": { "expression": null, "motion": null },
+        "happy": { "expression": "星星", "motion": null },
+        "sad": { "expression": "哭", "motion": null },
+        "angry": { "expression": "生气", "motion": null },
+        "embarrassed": { "expression": "脸红", "motion": null },
+        "confused": { "expression": "问号", "motion": null }
+      }
+    },
+    {
+      "id": "strawberry-rabbit-standard",
+      "displayName": "草莓兔兔标准行为",
+      "emotions": {
+        "neutral": { "expression": null, "motion": null },
+        "happy": { "expression": "爱心", "motion": null },
+        "sad": { "expression": "黑脸", "motion": null },
+        "embarrassed": { "expression": "红脸", "motion": null },
+        "excited": { "expression": "星星眼", "motion": "Scene1.motion3.json" }
+      }
+    }
+  ]
+}

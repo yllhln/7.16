@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "modelId": "strawberry-rabbit-trial",
+  "displayName": "草莓兔兔 试用",
+  "lookAt": {
+    "eyeX": { "parameterId": "ParamEyeBallX", "input": "pointer.x", "inputRange": [-1, 1], "outputRange": [-1, 1] },
+    "eyeY": { "parameterId": "ParamEyeBallY", "input": "pointer.y", "inputRange": [-1, 1], "outputRange": [-1, 1] },
+    "headX": { "parameterId": "ParamAngleX", "input": "pointer.x", "inputRange": [-1, 1], "outputRange": [-30, 30] },
+    "headY": { "parameterId": "ParamAngleY", "input": "pointer.y", "inputRange": [-1, 1], "outputRange": [-30, 30] }
+  },
+  "lipSync": { "mouthOpen": { "parameterId": "ParamMouthOpenY", "inputRange": [0, 1], "outputRange": [0, 1] } },
+  "expressions": [
+    { "id": "爱心", "file": "expressions/爱心.exp3.json" },
+    { "id": "黑脸", "file": "expressions/黑脸.exp3.json" },
+    { "id": "红脸", "file": "expressions/红脸.exp3.json" },
+    { "id": "水印", "file": "expressions/水印.exp3.json" },
+    { "id": "星星眼", "file": "expressions/星星眼.exp3.json" }
+  ],
+  "motions": [
+    { "id": "Scene1.motion3.json", "name": "Scene1", "group": "Idle", "index": 0, "file": "motion/Scene1.motion3.json" }
+  ],
+  "behaviorProfile": {
+    "neutral": { "expression": null, "motion": null },
+    "happy": { "expression": "爱心", "motion": null },
+    "sad": { "expression": "黑脸", "motion": null },
+    "embarrassed": { "expression": "红脸", "motion": null },
+    "excited": { "expression": "星星眼", "motion": "Scene1.motion3.json" }
+  }
+}

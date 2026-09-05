@@ -1,71 +1,77 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { getLive2DModel, type Live2DExpression } from "@/data/live2dModels";
-import { Live2DController } from "@/lib/live2d/Live2DController";
+import { Live2DRuntimeHandle, type Live2DMapping } from "@/lib/live2dRuntime";
 
-type Props = {
-  modelId: string;
-  expression?: Live2DExpression | null;
-  mouthOpen?: number;
-  triggerText?: string;
-};
+export interface Live2DCanvasProps {
+  modelUrl: string;
+  backgroundUrl?: string;
+  foregroundUrl?: string;
+  behaviorProfile?: Live2DMapping["behaviorProfile"];
+  emotion?: string;
+  className?: string;
+}
 
-export default function Live2DCanvas({ modelId, expression, mouthOpen = 0, triggerText = "" }: Props) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const controllerRef = useRef<Live2DController | null>(null);
-  const [loadedModelId, setLoadedModelId] = useState<string | null>(null);
-  const [failedModelId, setFailedModelId] = useState<string | null>(null);
-  const definition = getLive2DModel(modelId);
-  const ready = loadedModelId === modelId;
-  const error = !definition || failedModelId === modelId;
-  const maskType = definition?.mask?.type || "none";
-  const clipPath = maskType === "upper-body"
-    ? "inset(0 0 42% 0)"
-    : maskType === "left-half"
-      ? "inset(0 50% 0 0)"
-      : maskType === "right-half"
-        ? "inset(0 0 0 50%)"
-        : maskType === "custom"
-          ? definition?.mask?.clipPath || undefined
-          : undefined;
+export default function Live2DCanvas({
+  modelUrl,
+  backgroundUrl,
+  foregroundUrl,
+  behaviorProfile,
+  emotion,
+  className,
+}: Live2DCanvasProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const runtimeRef = useRef<Live2DRuntimeHandle | undefined>(undefined);
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
-    if (!canvasRef.current || !definition) return;
-    let cancelled = false;
-    const controller = new Live2DController(canvasRef.current, definition);
-    controllerRef.current = controller;
-    void controller.init().then(() => {
-      if (!cancelled) setLoadedModelId(modelId);
-    }).catch(() => {
-      if (!cancelled) setFailedModelId(modelId);
+    const container = containerRef.current;
+    if (!container) return;
+
+    const runtime = new Live2DRuntimeHandle({
+      container,
+      modelUrl,
+      backgroundUrl,
+      foregroundUrl,
+      behaviorProfile,
     });
+    runtimeRef.current = runtime;
+    setError(undefined);
+
+    runtime.load().catch((reason: unknown) => {
+      if (!runtime.getSnapshot().destroyed) {
+        setError(reason instanceof Error ? reason.message : "Live2D model failed to load.");
+      }
+    });
+
     return () => {
-      cancelled = true;
-      controller.destroy();
-      controllerRef.current = null;
+      runtime.destroy();
+      if (runtimeRef.current === runtime) runtimeRef.current = undefined;
     };
-  }, [definition, modelId]);
+  }, [modelUrl, backgroundUrl, foregroundUrl, behaviorProfile]);
 
   useEffect(() => {
-    if (expression) controllerRef.current?.applyExpression(expression);
-  }, [expression]);
-
-  useEffect(() => {
-    controllerRef.current?.setMouthOpen(mouthOpen);
-  }, [mouthOpen]);
-
-  useEffect(() => {
-    if (triggerText) controllerRef.current?.triggerFromText(triggerText);
-  }, [triggerText]);
+    if (emotion) void runtimeRef.current?.playEmotion(emotion);
+  }, [emotion]);
 
   return (
-    <div className="absolute inset-0 overflow-hidden" aria-label="Live2D assistant">
-      <div className="absolute inset-0" style={{ clipPath }}>
-      <canvas ref={canvasRef} className={`h-full w-full transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`} />
-      {!ready && !error ? <div className="absolute inset-0 grid place-items-center text-sm text-white/60">Live2D loading...</div> : null}
-      {error ? <div className="absolute inset-0 grid place-items-center px-8 text-center text-sm text-amber-100/80">Live2D unavailable</div> : null}
-      </div>
+    <div
+      ref={containerRef}
+      aria-label="Live2D model"
+      className={className}
+      style={{
+        position: "relative",
+        width: "100%",
+        minHeight: 420,
+        overflow: "hidden",
+        background: "transparent",
+      }}
+    >
+      {error ? (
+        <p role="status" style={{ padding: 24, color: "var(--foreground, #666)" }}>
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }

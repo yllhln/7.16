@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "modelId": "sea-angel",
+  "displayName": "海天使",
+  "lookAt": {
+    "eyeX": { "parameterId": "ParamEyeBallX", "input": "pointer.x", "inputRange": [-1, 1], "outputRange": [-1, 1] },
+    "eyeY": { "parameterId": "ParamEyeBallY", "input": "pointer.y", "inputRange": [-1, 1], "outputRange": [-1, 1] },
+    "headX": { "parameterId": "ParamAngleX", "input": "pointer.x", "inputRange": [-1, 1], "outputRange": [-30, 30] },
+    "headY": { "parameterId": "ParamAngleY", "input": "pointer.y", "inputRange": [-1, 1], "outputRange": [-30, 30] }
+  },
+  "lipSync": { "mouthOpen": { "parameterId": "ParamMouthOpenY", "inputRange": [0, 1], "outputRange": [0, 1] } },
+  "expressions": [
+    { "id": "哭", "file": "哭.exp3.json" },
+    { "id": "脸红", "file": "脸红.exp3.json" },
+    { "id": "眯眯眼", "file": "眯眯眼.exp3.json" },
+    { "id": "生气", "file": "生气.exp3.json" },
+    { "id": "问号", "file": "问号.exp3.json" },
+    { "id": "星星", "file": "星星.exp3.json" }
+  ],
+  "motions": [],
+  "behaviorProfile": {
+    "neutral": { "expression": null, "motion": null },
+    "happy": { "expression": "星星", "motion": null },
+    "sad": { "expression": "哭", "motion": null },
+    "angry": { "expression": "生气", "motion": null },
+    "embarrassed": { "expression": "脸红", "motion": null },
+    "confused": { "expression": "问号", "motion": null }
+  }
+}

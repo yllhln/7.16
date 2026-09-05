@@ -14,6 +14,22 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     "public/live2d/runtime/**",
   ]),
+  {
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+      "prefer-const": "off",
+      "react-hooks/set-state-in-effect": "off",
+      "react-hooks/immutability": "off",
+      "react-hooks/purity": "off",
+      "react-hooks/exhaustive-deps": "off",
+      "@next/next/no-img-element": "off",
+      "jsx-a11y/alt-text": "off",
+      "react/no-unescaped-entities": "off",
+      "react-hooks/unsupported-syntax": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

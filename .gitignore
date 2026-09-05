@@ -34,6 +34,9 @@ yarn-error.log*
 .env*
 !.env.local.example
 
+# Packaged Live2D model archives exceed GitHub's file-size limit.
+public/live2d/models/*.zip
+
 # vercel
 .vercel
 

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {
+      "id": "openai-compatible-tts",
+      "displayName": "OpenAI Compatible TTS",
+      "adapter": "openai-compatible",
+      "apiUrl": "",
+      "apiUrlEnv": "TTS_BASE_URL",
+      "apiKeyEnv": "TTS_API_KEY",
+      "modelIdEnv": "TTS_MODEL",
+      "voiceId": "",
+      "enabled": false,
+      "parameters": {}
+    },
+    {
+      "id": "volcengine-tts",
+      "displayName": "Volcengine TTS",
+      "adapter": "volcengine",
+      "apiUrl": "",
+      "apiUrlEnv": "VOLC_TTS_ENDPOINT",
+      "apiKeyEnv": "VOLC_TTS_ACCESS_TOKEN",
+      "voiceIdEnv": "VOLC_TTS_VOICE_TYPE",
+      "enabled": false,
+      "parameters": {
+        "appIdEnv": "VOLC_TTS_APP_ID",
+        "clusterEnv": "VOLC_TTS_CLUSTER"
+      }
+    }
+  ]
+}

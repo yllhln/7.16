@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {
+      "id": "openai-compatible-default",
+      "displayName": "OpenAI Compatible",
+      "adapter": "openai-compatible",
+      "baseUrl": "",
+      "baseUrlEnv": "AI_CHAT_BASE_URL",
+      "apiKeyEnv": "AI_CHAT_API_KEY",
+      "modelId": "",
+      "enabled": false,
+      "parameters": {}
+    },
+    {
+      "id": "gemini-default",
+      "displayName": "Gemini",
+      "adapter": "gemini",
+      "baseUrl": "",
+      "apiKeyEnv": "GEMINI_API_KEY",
+      "modelId": "",
+      "enabled": false,
+      "parameters": {}
+    }
+  ]
+}
