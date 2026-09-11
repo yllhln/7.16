@@ -1,0 +1,31 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "水色天使（试用）.moc3",
+		"Textures": [
+			"水色天使（试用）.2048/texture_00.png",
+			"水色天使（试用）.2048/texture_01.png",
+			"水色天使（试用）.2048/texture_02.png",
+			"水色天使（试用）.2048/texture_03.png",
+			"水色天使（试用）.2048/texture_04.png",
+			"水色天使（试用）.2048/texture_05.png"
+		],
+		"Physics": "水色天使（试用）.physics3.json",
+		"DisplayInfo": "水色天使（试用）.cdi3.json"
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": [
+				"ParamEyeLOpen",
+				"ParamEyeROpen"
+			]
+		},
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		}
+	]
+}
