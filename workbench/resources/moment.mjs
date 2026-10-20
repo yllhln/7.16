@@ -1,0 +1,1 @@
+export const resource={id:'moment',label:'说说',storage:{kind:'markdown',dir:'moments'},operations:['list','get','new','edit','delete'],fields:[{name:'date',type:'datetime',required:true},{name:'location',type:'string'},{name:'images',type:'url[]'}],columns:['id','date','location']};

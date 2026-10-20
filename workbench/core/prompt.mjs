@@ -1,0 +1,1 @@
+import readline from 'node:readline/promises';import {stdin as input,stdout as output} from 'node:process';export function isInteractive(){return !!(input.isTTY&&output.isTTY)}export async function ask(q){const r=readline.createInterface({input,output});try{return await r.question(q)}finally{r.close()}}

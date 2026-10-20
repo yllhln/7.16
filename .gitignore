@@ -43,3 +43,5 @@ public/live2d/models/*.zip
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/workbench/.backup/

@@ -1,0 +1,5 @@
+import fs from 'node:fs/promises';import path from 'node:path';
+let matter;
+try { matter=(await import('gray-matter')).default; } catch { matter=(raw)=>{const m=raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);if(!m)return {data:{},content:raw};const data={};for(const line of m[1].split(/\r?\n/)){const i=line.indexOf(':');if(i<0)continue;const k=line.slice(0,i).trim(),v=line.slice(i+1).trim();try{data[k]=JSON.parse(v)}catch{data[k]=v.replace(/^['"]|['"]$/g,'')}}return {data,content:m[2]};}; }
+export async function readMarkdown(root,r){const dir=path.join(root,r.storage.dir);const ns=(await fs.readdir(dir).catch(()=>[])).filter(n=>n.endsWith('.md'));return Promise.all(ns.map(async n=>{const file=path.join(dir,n),raw=await fs.readFile(file,'utf8'),p=matter(raw);return {id:n.slice(0,-3),file:path.relative(root,file).replaceAll('\\','/'),data:p.data,body:p.content,raw};}));}
+export function renderMarkdown(data,body,order=[]){const ks=[...order,...Object.keys(data).filter(k=>!order.includes(k))];return '---\n'+ks.filter(k=>data[k]!==undefined).map(k=>k+': '+JSON.stringify(data[k])).join('\n')+'\n---\n'+body;}

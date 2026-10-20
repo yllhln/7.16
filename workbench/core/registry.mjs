@@ -1,0 +1,3 @@
+import {readdir} from 'node:fs/promises'; import {fileURLToPath} from 'node:url'; import path from 'node:path';
+export async function loadRegistry(){const dir=path.resolve(fileURLToPath(new URL('../resources',import.meta.url))); const out=[]; for(const n of await readdir(dir)){if(!n.endsWith('.mjs')||n==='_ignore.mjs')continue; const m=await import(new URL('../resources/'+n,import.meta.url)); if(m.resource)out.push(m.resource)} const ids=new Set(); for(const r of out){if(!r.id||ids.has(r.id))throw Error('重复资源 id: '+r.id);ids.add(r.id)} return out.sort((a,b)=>a.id.localeCompare(b.id));}
+export function findResource(rs,id){const r=rs.find(x=>x.id===id);if(!r)throw Error('未知资源: '+id);return r;}

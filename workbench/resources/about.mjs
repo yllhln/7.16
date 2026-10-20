@@ -1,0 +1,1 @@
+export const resource={id:'about',label:'关于页',storage:{kind:'markdown',file:'app/about/about.md'},operations:['get','edit'],fields:[{name:'title',type:'string'},{name:'date',type:'datetime'},{name:'tags',type:'string[]'},{name:'mood',type:'string'},{name:'cover',type:'url'},{name:'description',type:'string'}],columns:['title','date']};

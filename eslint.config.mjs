@@ -13,6 +13,7 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     "public/live2d/runtime/**",
+    "workbench/**",
   ]),
   {
     rules: {

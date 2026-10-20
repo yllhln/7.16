@@ -1,0 +1,1 @@
+export const resource={id:'behavior-profile',label:'行为配置',storage:{kind:'json-collection',file:'data/behavior_profiles.json',collectionKey:'profiles'},operations:['list','get','new','edit','delete'],fields:[{name:'id',type:'string',required:true},{name:'displayName',type:'string',required:true},{name:'emotions',type:'object',required:true}],columns:['id','displayName']};

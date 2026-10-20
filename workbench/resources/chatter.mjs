@@ -1,0 +1,1 @@
+export const resource={id:'chatter',label:'杂谈',storage:{kind:'markdown',dir:'chatters'},operations:['list','get','new','edit','delete'],fields:[{name:'title',type:'string',required:true},{name:'date',type:'datetime',required:true},{name:'description',type:'string'},{name:'cover',type:'url'},{name:'tags',type:'string[]'},{name:'mood',type:'string'}],columns:['title','date']};

@@ -1,0 +1,1 @@
+export const resource={id:'post',label:'文章',storage:{kind:'markdown',dir:'posts'},operations:['list','get','new','edit','delete'],fields:[{name:'title',type:'string',required:true},{name:'date',type:'datetime',required:true},{name:'description',type:'string'},{name:'cover',type:'url'},{name:'tags',type:'string[]'},{name:'mood',type:'string'}],columns:['title','date','tags']};
