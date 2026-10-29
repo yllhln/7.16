@@ -229,6 +229,11 @@ export class Live2DRuntimeHandle {
   private pendingLookAt?: Live2DLookAtTarget;
   private lipSyncParameterId?: string;
   private audioUnsubscribe?: () => void;
+  private renderTicker?: (deltaTime: number) => void;
+  private visibilityObserver?: IntersectionObserver;
+  private wasCanvasOffscreen = false;
+  private renderPaused = false;
+  private lookAtDirty = false;
   private destroyed = false;
 
   constructor(options: Live2DRuntimeOptions) {
@@ -323,9 +328,7 @@ export class Live2DRuntimeHandle {
 
   setLookAt(target: Live2DLookAtTarget): void {
     this.pendingLookAt = target;
-    if (!this.model) return;
-    const point = this.resolveLookAtTarget(target);
-    this.model.focus(point.x, point.y);
+    this.lookAtDirty = true;
   }
 
   getSnapshot(): Live2DRuntimeSnapshot {
@@ -347,6 +350,8 @@ export class Live2DRuntimeHandle {
     this.model = undefined;
     this.mapping = undefined;
     this.lipSyncParameterId = undefined;
+    this.visibilityObserver?.disconnect();
+    this.visibilityObserver = undefined;
     if (model) {
       model.autoUpdate = false;
       if (model.parent) {
@@ -362,6 +367,7 @@ export class Live2DRuntimeHandle {
 
     const app = this.app;
     this.app = undefined;
+    this.stopRender(app);
     destroyApplication(app);
   }
 
@@ -395,9 +401,9 @@ export class Live2DRuntimeHandle {
       width,
       height,
       backgroundAlpha: 0,
-      antialias: true,
+      antialias: false,
       autoDensity: true,
-      resolution: window.devicePixelRatio || 1,
+      resolution: Math.min(window.devicePixelRatio || 1, 1.5),
     });
     this.app = app;
     app.view.style.display = "block";
@@ -480,10 +486,15 @@ export class Live2DRuntimeHandle {
         const point = this.resolveLookAtTarget(this.pendingLookAt);
         model.focus(point.x, point.y, true);
       }
+      this.installRenderThrottling(app, app.view);
       this.installInteraction(app.view, model, scale);
       return model;
     } catch (error) {
       this.app = undefined;
+      this.stopRender(app);
+      this.visibilityObserver?.disconnect();
+      this.visibilityObserver = undefined;
+      this.cleanupListeners.splice(0).forEach((cleanup) => cleanup());
       destroyApplication(app);
       throw error;
     }
@@ -570,6 +581,44 @@ export class Live2DRuntimeHandle {
     };
   }
 
+  private installRenderThrottling(app: PIXI.Application, view: HTMLCanvasElement): void {
+    const setPaused = () => {
+      const shouldPause = document.hidden || !view.isConnected || this.wasCanvasOffscreen;
+      if (shouldPause === this.renderPaused) return;
+      this.renderPaused = shouldPause;
+      if (shouldPause) app.ticker.stop();
+      else app.ticker.start();
+    };
+    const onVisibilityChange = () => setPaused();
+    this.wasCanvasOffscreen = false;
+    this.renderPaused = false;
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    this.cleanupListeners.push(() => document.removeEventListener("visibilitychange", onVisibilityChange));
+    this.renderTicker = () => {
+      if (!this.lookAtDirty || !this.pendingLookAt || !this.model) return;
+      const point = this.resolveLookAtTarget(this.pendingLookAt);
+      this.model.focus(point.x, point.y);
+      this.lookAtDirty = false;
+    };
+    app.ticker.add(this.renderTicker);
+
+    if (typeof IntersectionObserver !== "undefined") {
+      this.visibilityObserver = new IntersectionObserver(([entry]) => {
+        this.wasCanvasOffscreen = !entry.isIntersecting;
+        setPaused();
+      });
+      this.visibilityObserver.observe(view);
+    }
+    setPaused();
+  }
+
+  private stopRender(app: PIXI.Application | undefined): void {
+    if (!app || !this.renderTicker) return;
+    app.ticker.remove(this.renderTicker);
+    this.renderTicker = undefined;
+    this.renderPaused = false;
+  }
+
   private installInteraction(
     view: HTMLCanvasElement,
     model: Live2DModel,
@@ -594,11 +643,15 @@ export class Live2DRuntimeHandle {
     };
     let pinchDistance = 0;
 
+    const updateLookAt = (clientX: number, clientY: number) => {
+      const rect = view.getBoundingClientRect();
+      this.pendingLookAt = { x: clientX - rect.left, y: clientY - rect.top };
+      this.lookAtDirty = true;
+    };
     const onPointerDown = (event: PointerEvent) => {
       pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
       view.setPointerCapture?.(event.pointerId);
-      const rect = view.getBoundingClientRect();
-      model.focus(event.clientX - rect.left, event.clientY - rect.top);
+      updateLookAt(event.clientX, event.clientY);
       if (pointers.size === 1) {
         dragging = true;
         lastPoint = { x: event.clientX, y: event.clientY };
@@ -611,8 +664,7 @@ export class Live2DRuntimeHandle {
       const previous = pointers.get(event.pointerId);
       if (!previous) return;
       pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
-      const rect = view.getBoundingClientRect();
-      model.focus(event.clientX - rect.left, event.clientY - rect.top);
+      updateLookAt(event.clientX, event.clientY);
 
       if (pointers.size >= 2) {
         const nextDistance = distance();
@@ -636,7 +688,8 @@ export class Live2DRuntimeHandle {
       view.releasePointerCapture?.(event.pointerId);
     };
     const onPointerLeave = () => {
-      model.focus(view.clientWidth / 2, view.clientHeight / 2);
+      this.pendingLookAt = { x: view.clientWidth / 2, y: view.clientHeight / 2 };
+      this.lookAtDirty = true;
     };
     const onWheel = (event: WheelEvent) => {
       event.preventDefault();
