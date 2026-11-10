@@ -33,6 +33,50 @@
       "behaviorProfileId": "strawberry-rabbit-standard",
       "systemPrompt": "你是草莓兔兔，活泼可爱的陪伴型 AI 角色。请用轻快但不过度夸张的中文回答，优先给出有帮助的内容，不要把不确定的事情说成事实。每次回复都遵守应用要求的结构化输出格式。",
       "enabled": true
+    },
+    {
+      "id": "pink",
+      "name": "粉色",
+      "live2dModelId": "pink",
+      "backgroundId": "",
+      "aiProfileId": "",
+      "ttsProfileId": "",
+      "behaviorProfileId": "",
+      "systemPrompt": "",
+      "enabled": true
+    },
+    {
+      "id": "nicole",
+      "name": "Nicole",
+      "live2dModelId": "nicole",
+      "backgroundId": "",
+      "aiProfileId": "",
+      "ttsProfileId": "",
+      "behaviorProfileId": "",
+      "systemPrompt": "",
+      "enabled": true
+    },
+    {
+      "id": "kitty",
+      "name": "小猫咪",
+      "live2dModelId": "kitty",
+      "backgroundId": "",
+      "aiProfileId": "",
+      "ttsProfileId": "",
+      "behaviorProfileId": "",
+      "systemPrompt": "",
+      "enabled": true
+    },
+    {
+      "id": "water-angel",
+      "name": "水色天使",
+      "live2dModelId": "water-angel",
+      "backgroundId": "",
+      "aiProfileId": "",
+      "ttsProfileId": "",
+      "behaviorProfileId": "",
+      "systemPrompt": "",
+      "enabled": true
     }
   ]
 }
