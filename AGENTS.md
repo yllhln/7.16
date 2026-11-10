@@ -17,8 +17,10 @@
 - 工作台不启动 Next.js、HTTP 服务、预览服务，不执行部署。
 - 工作台本身不执行 Git 命令、不自动 commit、push 或发布到 GitHub。
 - Agent 可以在用户明确要求“提交/推送 GitHub”时，在工作台操作完成后单独执行 Git 流程；必须先检查 diff 和验证结果，并在有风险时向用户确认。
-- 禁止读取、打印、修改或备份 .env*、API key、密码、私钥和真实联系方式；配置中只能记录环境变量名称。
-- 禁止复制、上传、删除或重建 `public/` 中的 Live2D、背景和其他素材。Live2D 工作台只登记已有路径和元数据。
+- 禁止读取、打印、修改或备份 .env*、环境变量凭据、API key、密码和私钥；配置中只能记录环境变量名称。
+- 用户明确授权工作台模板明文读写 `siteConfig.ts` 中已登记的全部站点配置属性，包括 `social`、`gitalkConfig`、`counts`、`footerBadges`、`icpConfig`；这些属性可能包含真实联系方式或凭据，使用者须自行承担仓库明文存储风险。该授权不允许读取 .env、环境变量值或密钥文件。
+- 交互式工作台使用 `workbench/templates/*.txt` 作为整块源码模板、`workbench/assets/ascii/*.txt` 作为终端字符画；Notepad 关闭后严格校验，确认后经 safe-write 写入。
+- Live2D 素材优化与登记应遵循 `docs/live2d-model-slimming-agent-guide.md` 的审计、备份和复检要求。
 
 ### 2. Agent 接到内容任务时的标准流程
 
@@ -60,7 +62,7 @@ Agent 不要直接编辑文章、JSON 或 TS 文件。先把自然语言需求�
 
 #### 修改站点配置
 
-> 先运行 `schema site-config`，只能修改白名单属性。禁止接触 `social`、`gitalkConfig`、`footerBadges`、`icpConfig`、`counts` 和任何未登记字段。颜色数组、背景数组等复杂值使用 `--data-file`。修改后运行 check、sync，并检查 siteConfig.ts 的局部 diff。
+> 先运行 `schema site-config`，只能修改 `site-config` 注册表登记的属性；用户已授权通过工作台模板明文读取、显示和写回 `social`、`gitalkConfig`、`footerBadges`、`icpConfig`、`counts` 等已登记字段。不得读取 .env、环境变量值或密钥文件。复杂值按模板要求使用 JSON。修改后运行 check、sync，并检查 siteConfig.ts 的局部 diff。
 
 #### 管理 AI 角色和配置
 

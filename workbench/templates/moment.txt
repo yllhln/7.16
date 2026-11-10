@@ -1,0 +1,12 @@
+# Workbench resource: moment
+id: {id} #id (string)
+#= ""
+date: {date} #date (datetime)
+#= ""
+location: {location} #location (string)
+#= ""
+images: {images} #images (url[])
+#= []
+#说说内容 BEGIN
+
+#说说内容 END

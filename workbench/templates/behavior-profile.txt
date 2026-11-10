@@ -1,0 +1,7 @@
+# Workbench resource: behavior-profile
+id: {id} #id (string)
+#= ""
+displayName: {displayName} #displayName (string)
+#= ""
+emotions: {emotions} #emotions (object)
+#= {}

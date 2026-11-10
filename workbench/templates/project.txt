@@ -1,0 +1,13 @@
+# Workbench resource: project
+id: {id} #id (string)
+#= ""
+name: {name} #name (string)
+#= ""
+description: {description} #description (string)
+#= ""
+icon: {icon} #icon (string)
+#= ""
+githubUrl: {githubUrl} #githubUrl (url)
+#= ""
+tags: {tags} #tags (string[])
+#= []

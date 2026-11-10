@@ -1,0 +1,19 @@
+# Workbench resource: tts-profile
+id: {id} #id (string)
+#= ""
+displayName: {displayName} #displayName (string)
+#= ""
+adapter: {adapter} #adapter (string)
+#= ""
+apiUrl: {apiUrl} #apiUrl (url)
+#= ""
+apiUrlEnv: {apiUrlEnv} #apiUrlEnv (string)
+#= ""
+apiKeyEnv: {apiKeyEnv} #apiKeyEnv (string)
+#= ""
+voiceId: {voiceId} #voiceId (string)
+#= ""
+enabled: {enabled} #enabled (boolean)
+#= false
+parameters: {parameters} #parameters (object)
+#= {}

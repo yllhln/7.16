@@ -1,0 +1,13 @@
+# Workbench resource: friend
+id: {id} #id (string)
+#= ""
+name: {name} #name (string)
+#= ""
+url: {url} #url (url)
+#= ""
+description: {description} #description (string)
+#= ""
+avatar: {avatar} #avatar (url)
+#= ""
+themeColor: {themeColor} #themeColor (string)
+#= ""

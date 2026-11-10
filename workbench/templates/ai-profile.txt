@@ -1,0 +1,19 @@
+# Workbench resource: ai-profile
+id: {id} #id (string)
+#= ""
+displayName: {displayName} #displayName (string)
+#= ""
+adapter: {adapter} #adapter (string)
+#= ""
+baseUrl: {baseUrl} #baseUrl (url)
+#= ""
+baseUrlEnv: {baseUrlEnv} #baseUrlEnv (string)
+#= ""
+apiKeyEnv: {apiKeyEnv} #apiKeyEnv (string)
+#= ""
+modelId: {modelId} #modelId (string)
+#= ""
+enabled: {enabled} #enabled (boolean)
+#= false
+parameters: {parameters} #parameters (object)
+#= {}

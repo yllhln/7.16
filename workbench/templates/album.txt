@@ -1,0 +1,13 @@
+# Workbench resource: album
+id: {id} #id (string)
+#= ""
+title: {title} #title (string)
+#= ""
+description: {description} #description (string)
+#= ""
+cover: {cover} #cover (url)
+#= ""
+date: {date} #date (string)
+#= ""
+photos: {photos} #photos (object[])
+#= []

@@ -1,0 +1,7 @@
+# Workbench resource: live2d-model
+id: ""  # 唯一标识，不能重复（如 kitty-001）
+displayName: ""  # 显示名称（昵称，如 小猫咪）
+format: "moc3"  # 模型文件格式，默认 moc3（可选 moc/moc3/cubism2/cubism4）
+publicModelPath: ""  # 模型文件的访问路径（相对路径，如 live2d/小猫咪/小猫咪.moc3）
+mappingPath: ""  # 映射文件路径，默认留空或填 mapping.json
+status: "active"  # 启用状态（启用 active，禁用 disabled）

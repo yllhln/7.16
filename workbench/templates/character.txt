@@ -1,0 +1,10 @@
+# Workbench resource: character
+id: ""  # 唯一标识，不能重复（如 mo、sea-angel）
+name: ""  # 角色显示名称（如 MO、海天使）
+systemPrompt: ""  # 角色系统提示词（定义角色性格、说话风格的长文本）
+enabled: false  # 是否启用该角色（true 启用，false 禁用）
+live2dModelId: ""  # 关联的 Live2D 模型 ID（需先在 Live2D 模型列表中存在）
+backgroundId: ""  # 关联的背景 ID（需先在背景列表中存在）
+aiProfileId: ""  # 关联的 AI 配置 ID（需先在 AI 配置列表中存在）
+ttsProfileId: ""  # 关联的 TTS 配置 ID（需先在 TTS 配置列表中存在）
+behaviorProfileId: ""  # 关联的行为配置 ID（需先在行为配置列表中存在）

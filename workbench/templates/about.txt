@@ -1,0 +1,13 @@
+# Workbench resource: about
+title: {title} #title (string)
+#= ""
+date: {date} #date (datetime)
+#= ""
+tags: {tags} #tags (string[])
+#= []
+mood: {mood} #mood (string)
+#= ""
+cover: {cover} #cover (url)
+#= ""
+description: {description} #description (string)
+#= ""

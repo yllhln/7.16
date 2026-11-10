@@ -97,6 +97,153 @@
         "The model manifest declares a LipSync group with no parameter IDs; do not fabricate a mouth parameter.",
         "LookAt parameter IDs are not declared by the manifest and must be inspected during mapping generation."
       ]
+    },
+    {
+      "id": "pink",
+      "displayName": "粉色",
+      "format": "moc3",
+      "sourceModelPath": "粉色/model/model.model3.json",
+      "publicModelPath": "/live2d/粉色/model/model.model3.json",
+      "manifestVersion": 3,
+      "status": "active",
+      "resources": {
+        "moc": "粉色/model/model.moc3",
+        "physics": "粉色/model/model.physics3.json",
+        "displayInfo": "粉色/model/model.cdi3.json",
+        "textureCount": 1,
+        "expressionFiles": [
+          "expressions/Param.exp3.json",
+          "expressions/Param2.exp3.json",
+          "expressions/Param3.exp3.json",
+          "expressions/Param4.exp3.json",
+          "expressions/Param5.exp3.json",
+          "expressions/Param6.exp3.json",
+          "expressions/Param7.exp3.json",
+          "expressions/Param8.exp3.json",
+          "expressions/Param10.exp3.json",
+          "expressions/Param11.exp3.json",
+          "expressions/9.exp3.json",
+          "expressions/12.exp3.json",
+          "expressions/13.exp3.json",
+          "expressions/14.exp3.json",
+          "expressions/15.exp3.json",
+          "expressions/qq.exp3.json",
+          "expressions/arm1.exp3.json",
+          "expressions/arm2.exp3.json",
+          "expressions/arm3.exp3.json"
+        ],
+        "motionFiles": ["motions/idle.motion3.json"]
+      },
+      "declaredParameterGroups": {
+        "eyeBlink": [],
+        "lipSync": []
+      },
+      "mappingPath": "",
+      "mappingStatus": "pending",
+      "notes": [
+        "EyeBlink and LipSync groups are empty in manifest; parameters need to be inspected for mapping generation."
+      ]
+    },
+    {
+      "id": "nicole",
+      "displayName": "Nicole",
+      "format": "moc3",
+      "sourceModelPath": "nicole/Nicole.model3.json",
+      "publicModelPath": "/live2d/nicole/Nicole.model3.json",
+      "manifestVersion": 3,
+      "status": "active",
+      "resources": {
+        "moc": "nicole/Nicole.moc3",
+        "physics": "nicole/Nicole.physics3.json",
+        "displayInfo": "nicole/Nicole.cdi3.json",
+        "textureCount": 2,
+        "expressionFiles": [
+          "Love eye.exp3.json",
+          "Love Hand Posture.exp3.json",
+          "Milk Tea.exp3.json",
+          "Money eye.exp3.json",
+          "Money Hand Posture.exp3.json",
+          "black face.exp3.json",
+          "cry.exp3.json",
+          "Phone Hand Posture.exp3.json",
+          "shyness.exp3.json",
+          "Y Hand Posture.exp3.json",
+          "sitting position.exp3.json"
+        ],
+        "motionFiles": []
+      },
+      "declaredParameterGroups": {
+        "eyeBlink": [],
+        "lipSync": []
+      },
+      "mappingPath": "",
+      "mappingStatus": "pending",
+      "notes": [
+        "EyeBlink and LipSync groups are empty in manifest; parameters need to be inspected for mapping generation."
+      ]
+    },
+    {
+      "id": "kitty",
+      "displayName": "小猫咪",
+      "format": "moc3",
+      "sourceModelPath": "小猫咪/sdwhite cat free.model3.json",
+      "publicModelPath": "/live2d/小猫咪/sdwhite cat free.model3.json",
+      "manifestVersion": 3,
+      "status": "active",
+      "resources": {
+        "moc": "小猫咪/SDwhite cat free.moc3",
+        "physics": "小猫咪/SDwhite cat free.physics3.json",
+        "displayInfo": "小猫咪/SDwhite cat free.cdi3.json",
+        "textureCount": 1,
+        "expressionFiles": [
+          "cat.exp3.json",
+          "2.exp3.json",
+          "3.exp3.json",
+          "4.exp3.json",
+          "hair2.exp3.json",
+          "sing.exp3.json"
+        ],
+        "motionFiles": []
+      },
+      "declaredParameterGroups": {
+        "eyeBlink": ["ParamEyeLOpen", "ParamEyeROpen"],
+        "lipSync": []
+      },
+      "mappingPath": "",
+      "mappingStatus": "pending",
+      "notes": [
+        "LipSync group has no parameter IDs; do not fabricate a mouth parameter.",
+        "LookAt parameter IDs are not declared by the manifest and must be inspected during mapping generation."
+      ]
+    },
+    {
+      "id": "water-angel",
+      "displayName": "水色天使",
+      "format": "moc3",
+      "sourceModelPath": "水色天使/水色天使/水色天使（试用）.model3.json",
+      "publicModelPath": "/live2d/水色天使/水色天使/水色天使（试用）.model3.json",
+      "manifestVersion": 3,
+      "status": "active",
+      "resources": {
+        "moc": "水色天使/水色天使/水色天使（试用）.moc3",
+        "physics": "水色天使/水色天使/水色天使（试用）.physics3.json",
+        "displayInfo": "水色天使/水色天使/水色天使（试用）.cdi3.json",
+        "textureCount": 6,
+        "expressionFiles": [
+          "关闭VB口型.exp3.json"
+        ],
+        "motionFiles": []
+      },
+      "declaredParameterGroups": {
+        "eyeBlink": ["ParamEyeLOpen", "ParamEyeROpen"],
+        "lipSync": []
+      },
+      "mappingPath": "",
+      "mappingStatus": "pending",
+      "notes": [
+        "LipSync group has no parameter IDs; do not fabricate a mouth parameter.",
+        "LookAt parameter IDs are not declared by the manifest and must be inspected during mapping generation."
+      ]
     }
   ]
 }

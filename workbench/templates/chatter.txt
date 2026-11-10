@@ -1,0 +1,18 @@
+# Workbench resource: chatter
+id: {id} #id (string)
+#= ""
+title: {title} #title (string)
+#= ""
+date: {date} #date (datetime)
+#= ""
+description: {description} #description (string)
+#= ""
+cover: {cover} #cover (url)
+#= ""
+tags: {tags} #tags (string[])
+#= []
+mood: {mood} #mood (string)
+#= ""
+#文章内容 BEGIN
+
+#文章内容 END

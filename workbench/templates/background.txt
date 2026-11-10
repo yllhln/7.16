@@ -1,0 +1,9 @@
+# Workbench resource: background
+id: {id} #id (string)
+#= ""
+displayName: {displayName} #displayName (string)
+#= ""
+publicPath: {publicPath} #publicPath (url)
+#= ""
+enabled: {enabled} #enabled (boolean)
+#= false

@@ -1,0 +1,53 @@
+# Workbench resource: site-config
+title: {title} #title (string)
+#= ""
+faviconUrl: {faviconUrl} #faviconUrl (string)
+#= ""
+authorName: {authorName} #authorName (string)
+#= ""
+bio: {bio} #bio (string)
+#= ""
+navTitle: {navTitle} #navTitle (string)
+#= ""
+navSuffix: {navSuffix} #navSuffix (string)
+#= ""
+navAfter: {navAfter} #navAfter (string)
+#= ""
+avatarUrl: {avatarUrl} #avatarUrl (string)
+#= ""
+useGradient: {useGradient} #useGradient (boolean)
+#= false
+themeColors: {themeColors} #themeColors (string[])
+#= []
+bgImages: {bgImages} #bgImages (string[])
+#= []
+aiPageBackground: {aiPageBackground} #aiPageBackground (string)
+#= ""
+aiChatBackground: {aiChatBackground} #aiChatBackground (string)
+#= ""
+defaultPostCover: {defaultPostCover} #defaultPostCover (string)
+#= ""
+photoWallImage: {photoWallImage} #photoWallImage (string)
+#= ""
+social: {social} #social (object)
+#= {}
+counts: {counts} #counts (object)
+#= {}
+chatterTitle: {chatterTitle} #chatterTitle (string)
+#= ""
+chatterDescription: {chatterDescription} #chatterDescription (string)
+#= ""
+danmakuList: {danmakuList} #danmakuList (string[])
+#= []
+gitalkConfig: {gitalkConfig} #gitalkConfig (object)
+#= {}
+buildDate: {buildDate} #buildDate (string)
+#= ""
+footerBadges: {footerBadges} #footerBadges (object[])
+#= []
+icpConfig: {icpConfig} #icpConfig (object)
+#= {}
+friendLinkApplyFormat: {friendLinkApplyFormat} #friendLinkApplyFormat (string)
+#= ""
+enableLevelSystem: {enableLevelSystem} #enableLevelSystem (boolean)
+#= false
